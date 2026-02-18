@@ -1,18 +1,26 @@
 /** @type {import('next').NextConfig} */
-
 const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true, // Keep this to avoid the ESLint 9 conflict
+  },
   images: {
-    domains: ['localhost', 'your-backend-domain.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'connektx-blogs-backend.onrender.com',
+      },
+    ],
   },
   async rewrites() {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
     return [
       {
         source: '/api/:path*',
-        destination: 'http://localhost:8080/api/:path*', // Your backend URL
+        destination: `${backendUrl}/api/:path*`, 
       },
       {
         source: '/sitemap.xml',
-        destination: 'http://localhost:8080/api/sitemap.xml',
+        destination: `${backendUrl}/api/sitemap.xml`,
       }
     ]
   }
