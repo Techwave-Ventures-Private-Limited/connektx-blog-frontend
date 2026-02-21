@@ -2,6 +2,7 @@
 
 import Script from "next/script";
 import Head from "next/head";
+import Link from "next/link"
 
 export default function Home() {
   return (
@@ -179,30 +180,30 @@ export default function Home() {
             <div>
                 <h4 className="font-semibold text-slate-900 mb-4">Company</h4>
                 <ul className="space-y-2 text-sm text-slate-600">
-                <li>
-                    <a
-                    href="https://techwaveventures.in"
-                    className="hover:text-sky-600"
-                    >
-                    About Us
-                    </a>
-                </li>
-                <li>
-                    <a
-                    href="mailto:contact@connektx.com"
-                    className="hover:text-sky-600"
-                    >
-                    Contact
-                    </a>
-                </li>
-                <li>
-                    <a
-                    href="privacy-policy.html"
-                    className="hover:text-sky-600"
-                    >
-                    Privacy Policy
-                    </a>
-                </li>
+                    <li>
+                        <a
+                        href="https://techwaveventures.in"
+                        className="hover:text-sky-600"
+                        >
+                        About Us
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                        href="mailto:contact@connektx.com"
+                        className="hover:text-sky-600"
+                        >
+                        Contact
+                        </a>
+                    </li>
+                    <li>
+                        <Link
+                            href="/company/privacy-policy"
+                            className="hover:text-sky-600 transition-colors"
+                        >
+                            Privacy Policy
+                        </Link>
+                    </li>
                 </ul>
             </div>
 
@@ -267,7 +268,7 @@ export default function Home() {
                 </p>
 
                 <div className="flex gap-6 text-sm text-slate-400">
-                    <a href="privacy-policy.html" className="hover:text-slate-600">Privacy</a>
+                    <Link href="/company/privacy-policy" className="hover:text-slate-600">Privacy</Link>
                 </div>
             </div>
 
