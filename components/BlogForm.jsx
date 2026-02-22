@@ -222,15 +222,30 @@ export default function BlogForm({ categories, onSubmit, submitButtonText, initi
       {/* thumbnail */}
       <div>
         <label htmlFor="thumbnail" className="block text-sm font-medium text-gray-700 mb-2">Thumbnail Image</label>
-        <input
-          id="thumbnail"
-          type="file"
-          accept="image/*"
-          disabled={isUploading}
-          onChange={(e) => handleFileUpload(e.target.files[0])}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-        />
+
+        <div className="flex items-center gap-2">
+          {/* Show current URL in a read-only text input */}
+          <input
+            type="text"
+            readOnly
+            value={formData.thumbnail || ''}
+            placeholder="No file selected"
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-sm text-gray-700"
+          />
+
+          {/* File input for replacing image */}
+          <input
+            id="thumbnail"
+            type="file"
+            accept="image/*"
+            disabled={isUploading}
+            onChange={(e) => handleFileUpload(e.target.files[0])}
+            className="px-3 py-2 border border-gray-300 rounded-md cursor-pointer"
+          />
+        </div>
+
         {isUploading && <p className="text-blue-500 mt-1">Uploading…</p>}
+
         {formData.thumbnail && (
           <div className="mt-2">
             <p className="text-sm text-gray-600 mb-2">Preview:</p>
