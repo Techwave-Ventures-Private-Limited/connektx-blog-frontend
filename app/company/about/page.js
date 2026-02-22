@@ -111,6 +111,34 @@ export default function WhoAreWe() {
           </div>
         </section>
 
+        {/* WHO CONNEKTX IS FOR */}
+        <section className="py-24 bg-white">
+          <div className="max-w-4xl mx-auto px-6">
+            <h2 className="text-3xl font-bold text-slate-900 mb-10">
+              Who Connektx Is For
+            </h2>
+
+            <div className="space-y-6 text-medium text-slate-600 leading-relaxed">
+              <p>
+                Connektx is built for builders.
+              </p>
+
+              <ul className="list-disc pl-6">
+                <li className="mb-2">Students who want serious opportunities.</li>
+                <li className="mb-2">Early professionals looking for aligned teams.</li>
+                <li className="mb-2">Founders searching for committed collaborators.</li>
+                <li className="mb-2">Recruiters who care about skills over noise.</li>
+              </ul>
+              
+
+              <p className="text-slate-900 font-medium">
+                If you're ambitious and intentional about growth —
+                this platform is for you.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* FOUNDERS */}
         <section className="py-20 bg-slate-50">
           <div className="max-w-6xl mx-auto px-6">
