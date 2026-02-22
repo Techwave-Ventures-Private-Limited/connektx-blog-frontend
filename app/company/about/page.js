@@ -62,6 +62,55 @@ export default function WhoAreWe() {
           </div>
         </section>
 
+        {/* WHY WE ARE BUILDING */}
+        <section className="py-24 bg-slate-50">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="grid md:grid-cols-2 gap-16 items-center">
+
+              {/* LEFT: IMAGE */}
+              <div>
+                <img
+                  src="/images/why-image.jpg"
+                  alt="Founders discussing product strategy"
+                  className="w-full h-auto rounded-2xl shadow-lg object-cover"
+                />
+              </div>
+
+              {/* RIGHT: TEXT */}
+              <div>
+                <h2 className="text-3xl font-bold text-slate-900 mb-10">
+                  Why We're Building Connektx
+                </h2>
+
+                <div className="space-y-6 text-medium text-slate-600 leading-relaxed">
+                  <p>
+                    We experienced how fragmented professional growth can feel.
+                    Opportunities are scattered. Discovery is accidental.
+                    Meaningful collaboration is rare.
+                  </p>
+
+                  <p>
+                    Most platforms optimize for visibility and volume.
+                    We believe networking should optimize for alignment.
+                  </p>
+
+                  <p>
+                    The next generation of builders doesn't need another feed.
+                    They need a focused ecosystem where skills surface opportunities,
+                    interests create connections, and intent drives outcomes.
+                  </p>
+
+                  <p className="text-slate-900 font-medium">
+                    We're building Connektx to make professional discovery deliberate —
+                    not random.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
         {/* FOUNDERS */}
         <section className="py-20 bg-slate-50">
           <div className="max-w-6xl mx-auto px-6">
