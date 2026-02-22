@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const metadata = {
-  title: 'Privacy Policy | ConnektX',
+  title: 'Privacy Policy',
   description: 'Learn how ConnektX collects, uses, and protects your information.',
 };
 

@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "Who We Are | Connektx",
+  title: "Who We Are",
   description:
     "Meet the founders behind Connektx and learn about the mission driving the platform.",
 };

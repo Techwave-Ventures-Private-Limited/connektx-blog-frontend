@@ -3,7 +3,7 @@ import Header from '@/components/Header';
 import CategoryCard from '@/components/CategoryCard';
 
 export const metadata = {
-  title: 'Explore Categories | ConnektX',
+  title: 'Explore Categories',
   description:
     'Browse startup news, business insights, funding updates and market trends across categories on ConnektX.',
 };
