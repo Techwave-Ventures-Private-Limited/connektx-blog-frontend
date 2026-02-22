@@ -2,7 +2,8 @@
 
 import Script from "next/script";
 import Head from "next/head";
-import Link from "next/link"
+import Link from "next/link";
+import { LinkedinLogo, FacebookLogo, InstagramLogo } from "phosphor-react";
 
 export default function Home() {
   return (
@@ -279,7 +280,7 @@ export default function Home() {
                     className="text-slate-400 hover:text-[#0077b5] transition-colors"
                     aria-label="LinkedIn"
                   >
-                    <i className="ph ph-linkedin-logo text-2xl"></i>
+                    <LinkedinLogo size={28} weight="fill" />
                   </a>
 
                   <a
@@ -289,7 +290,7 @@ export default function Home() {
                     className="text-slate-400 hover:text-[#1877F2] transition-colors"
                     aria-label="Facebook"
                   >
-                    <i className="ph ph-facebook-logo text-2xl"></i>
+                    <FacebookLogo size={28} weight="fill" />
                   </a>
 
                   <a
@@ -299,7 +300,7 @@ export default function Home() {
                     className="text-slate-400 hover:text-[#E4405F] transition-colors"
                     aria-label="Instagram"
                   >
-                    <i className="ph ph-instagram-logo text-2xl"></i>
+                    <InstagramLogo size={28} weight="fill" />
                   </a>
                 </div>
               </div>
