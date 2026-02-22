@@ -200,7 +200,7 @@ export default function Home() {
                 <ul className="space-y-2 text-sm text-slate-600">
                   <li>
                     <Link
-                      href="/company/who-are-we"
+                      href="/company/about#who-are-we"
                       className="hover:text-sky-600 transition-colors"
                     >
                       Who Are We
@@ -208,7 +208,7 @@ export default function Home() {
                   </li>
                   <li>
                     <Link
-                      href="/company/why-we-built-connektx"
+                      href="/company/about#why-we-built-connektx"
                       className="hover:text-sky-600 transition-colors"
                     >
                       Why We Built ConnektX
@@ -216,7 +216,7 @@ export default function Home() {
                   </li>
                   <li>
                     <Link
-                      href="/company/who-is-connektx-for"
+                      href="/company/about#who-is-connektx-for"
                       className="hover:text-sky-600 transition-colors"
                     >
                       Who Is ConnektX For

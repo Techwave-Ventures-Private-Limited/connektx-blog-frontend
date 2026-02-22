@@ -15,7 +15,7 @@ export default function WhoAreWe() {
       <main className="bg-white text-slate-800">
 
         {/* STORY */}
-        <section className="py-24 bg-white">
+        <section id="who-are-we" className="py-24 bg-white">
           <div className="max-w-6xl mx-auto px-6">
             <div className="grid md:grid-cols-2 gap-16 items-center">
 
@@ -63,7 +63,7 @@ export default function WhoAreWe() {
         </section>
 
         {/* WHY WE ARE BUILDING */}
-        <section className="py-24 bg-slate-50">
+        <section id="why-we-built-connektx" className="py-24 bg-slate-50">
           <div className="max-w-6xl mx-auto px-6">
             <div className="grid md:grid-cols-2 gap-16 items-center">
 
@@ -112,7 +112,7 @@ export default function WhoAreWe() {
         </section>
 
         {/* WHO CONNEKTX IS FOR */}
-        <section className="py-24 bg-white">
+        <section id="who-is-connektx-for" className="py-24 bg-white">
           <div className="max-w-4xl mx-auto px-6">
             <h2 className="text-3xl font-bold text-slate-900 mb-10">
               Who Connektx Is For
@@ -140,7 +140,7 @@ export default function WhoAreWe() {
         </section>
 
         {/* FOUNDERS */}
-        <section className="py-20 bg-slate-50">
+        <section id="founders" className="py-20 bg-slate-50">
           <div className="max-w-6xl mx-auto px-6">
             <h2 className="text-3xl font-bold text-slate-900 text-center mb-12">
               Meet the Founders

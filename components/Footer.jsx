@@ -28,17 +28,17 @@ export default function Footer() {
             <h4 className="font-semibold text-slate-900 mb-4">Company</h4>
             <ul className="space-y-2 text-sm text-slate-600">
               <li>
-                <Link href="/company/who-are-we" className="hover:text-sky-600 transition-colors">
+                <Link href="/company/about#who-are-we" className="hover:text-sky-600 transition-colors">
                   Who Are We
                 </Link>
               </li>
               <li>
-                <Link href="/company/why-we-built-connektx" className="hover:text-sky-600 transition-colors">
+                <Link href="/company/about#why-we-built-connektx" className="hover:text-sky-600 transition-colors">
                   Why We Built ConnektX
                 </Link>
               </li>
               <li>
-                <Link href="/company/who-is-connektx-for" className="hover:text-sky-600 transition-colors">
+                <Link href="/company/about#who-is-connektx-for" className="hover:text-sky-600 transition-colors">
                   Who Is ConnektX For
                 </Link>
               </li>
