@@ -84,7 +84,7 @@ export default function Home() {
                 href="#roles"
                 className="px-8 py-3.5 text-base font-semibold text-slate-700 bg-white border border-slate-200 rounded-full hover:bg-slate-50 transition"
               >
-                How It Works
+                See How It Works
               </a>
             </div>
 
@@ -93,97 +93,80 @@ export default function Home() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-sky-50 rounded-full blur-3xl -z-10 opacity-60"></div>
         </section>
 
-        {/* HOW PEOPLE USE CONNEKTX */}
+        {/* HOW CONNEKTX HELPS BUILDERS */}
         <section id="roles" className="py-24 bg-slate-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
-                How People Use ConnektX
+                How ConnektX Helps Builders
               </h2>
               <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
-                Whether you're building, hiring, or exploring — it starts with the right connection.
+                Whether you're starting something new or joining something ambitious —
+                it begins with the right people.
               </p>
             </div>
 
-            {/* 3D Perspective Wrapper */}
-            <div className="grid md:grid-cols-3 gap-8 [perspective:1000px]">
+            {/* Perspective wrapper for 3D depth */}
+            <div className="grid md:grid-cols-2 gap-10 [perspective:1200px]">
 
-              {/* Card 1 */}
+              {/* CARD 1 */}
               <div className="group relative">
-                <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm transition duration-500 ease-out
-                                transform-gpu group-hover:-translate-y-2 
-                                group-hover:rotate-x-2 group-hover:-rotate-y-2 
-                                group-hover:shadow-2xl">
+                <div
+                  className="p-10 rounded-3xl bg-white border border-slate-200 shadow-sm
+                            transition-all duration-500 ease-out
+                            transform-gpu
+                            group-hover:-translate-y-3
+                            group-hover:rotate-x-2
+                            group-hover:-rotate-y-2
+                            group-hover:shadow-2xl"
+                >
+                  <div className="text-3xl mb-6">🛠️</div>
 
-                  <div className="text-3xl mb-6">🤝</div>
-
-                  <h3 className="text-xl font-semibold text-slate-900 mb-3">
-                    Find a Co-Founder
+                  <h3 className="text-2xl font-semibold text-slate-900 mb-4">
+                    Build Something
                   </h3>
 
-                  <p className="text-sm text-slate-600 mb-6 leading-relaxed">
-                    Connect with builders actively working on ideas and looking for collaborators.
+                  <p className="text-slate-600 leading-relaxed mb-6">
+                    Turn your ideas into reality by connecting with people who are serious
+                    about building and collaborating.
                   </p>
 
                   <ul className="space-y-2 text-sm text-slate-500">
-                    <li>• Early stage projects</li>
-                    <li>• Skill-based matching</li>
-                    <li>• Direct conversations</li>
+                    <li>• Start new projects</li>
+                    <li>• Find collaborators</li>
+                    <li>• Move faster with the right team</li>
                   </ul>
-
                 </div>
               </div>
 
-              {/* Card 2 */}
+              {/* CARD 2 */}
               <div className="group relative">
-                <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm transition duration-500 ease-out
-                                transform-gpu group-hover:-translate-y-2 
-                                group-hover:rotate-x-2 group-hover:-rotate-y-2 
-                                group-hover:shadow-2xl">
-
+                <div
+                  className="p-10 rounded-3xl bg-white border border-slate-200 shadow-sm
+                            transition-all duration-500 ease-out
+                            transform-gpu
+                            group-hover:-translate-y-3
+                            group-hover:rotate-x-2
+                            group-hover:-rotate-y-2
+                            group-hover:shadow-2xl"
+                >
                   <div className="text-3xl mb-6">🚀</div>
 
-                  <h3 className="text-xl font-semibold text-slate-900 mb-3">
-                    Hire Your Team Members
+                  <h3 className="text-2xl font-semibold text-slate-900 mb-4">
+                    Join Someone Who’s Building
                   </h3>
 
-                  <p className="text-sm text-slate-600 mb-6 leading-relaxed">
-                    Post opportunities and connect with people who genuinely want to build in startups.
+                  <p className="text-slate-600 leading-relaxed mb-6">
+                    Work on meaningful ideas by joining ambitious founders and early-stage
+                    teams building real products.
                   </p>
 
                   <ul className="space-y-2 text-sm text-slate-500">
-                    <li>• Interns & early hires</li>
-                    <li>• Focused profiles</li>
-                    <li>• Faster responses</li>
+                    <li>• Discover early-stage teams</li>
+                    <li>• Contribute to real products</li>
+                    <li>• Grow alongside builders</li>
                   </ul>
-
-                </div>
-              </div>
-
-              {/* Card 3 */}
-              <div className="group relative">
-                <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm transition duration-500 ease-out
-                                transform-gpu group-hover:-translate-y-2 
-                                group-hover:rotate-x-2 group-hover:-rotate-y-2 
-                                group-hover:shadow-2xl">
-
-                  <div className="text-3xl mb-6">🌱</div>
-
-                  <h3 className="text-xl font-semibold text-slate-900 mb-3">
-                    Join an Early-Stage Startup
-                  </h3>
-
-                  <p className="text-sm text-slate-600 mb-6 leading-relaxed">
-                    Discover startups building in public and find meaningful opportunities.
-                  </p>
-
-                  <ul className="space-y-2 text-sm text-slate-500">
-                    <li>• Internships & roles</li>
-                    <li>• Direct founder access</li>
-                    <li>• Real startup exposure</li>
-                  </ul>
-
                 </div>
               </div>
 
