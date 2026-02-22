@@ -16,37 +16,48 @@ export default function WhoAreWe() {
 
         {/* STORY */}
         <section className="py-24 bg-white">
-          <div className="max-w-4xl mx-auto px-6">
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-10">
-              Who We Are
-            </h1>
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="grid md:grid-cols-2 gap-16 items-center">
 
-            <div className="space-y-6 text-lg text-slate-600 leading-relaxed">
-              <p>
-                We’re a team of builders who felt the gap between ambition and access.
-              </p>
+              {/* LEFT: TEXT */}
+              <div>
+                <h1 className="text-3xl md:text-5xl font-bold text-slate-900 mb-10">
+                  Who We Are
+                </h1>
 
-              <p>
-                Existing professional platforms became too corporate, too noisy,
-                and too transactional. Networking turned into cold messages.
-                Hiring turned into endless scrolling. Discovery lost its intent.
-              </p>
+                <div className="space-y-6 text-medium text-slate-600 leading-relaxed">
+                  <p>
+                    We’re a team of builders who felt the gap between ambition and access.
+                  </p>
 
-              <p>
-                We believed there had to be a better way — one where connections
-                are driven by interest, skills, and aligned goals instead of titles
-                and vanity metrics.
-              </p>
+                  <p>
+                    Existing professional platforms became too corporate, too noisy,
+                    and too transactional. Networking turned into cold messages.
+                    Hiring turned into endless scrolling. Discovery lost its intent.
+                  </p>
 
-              <p>
-                Connektx is our attempt to rebuild professional networking from
-                first principles — focused, intent-based, and opportunity-driven.
-              </p>
+                  <p>
+                    We believed there had to be a better way — one where connections
+                    are driven by interest, skills, and aligned goals instead of titles
+                    and vanity metrics.
+                  </p>
 
-              <p className="text-slate-900 font-medium">
-                We’re not building another social platform.  
-                We’re building an ecosystem for serious builders.
-              </p>
+                  <p className="text-slate-900 font-medium">
+                    Connektx isn’t another social platform.
+                    It’s an ecosystem for serious builders.
+                  </p>
+                </div>
+              </div>
+
+              {/* RIGHT: IMAGE */}
+              <div className="relative">
+                <img
+                  src="/images/story-image.jpg"
+                  alt="Builders collaborating"
+                  className="w-full h-auto rounded-2xl shadow-lg object-cover"
+                />
+              </div>
+
             </div>
           </div>
         </section>
