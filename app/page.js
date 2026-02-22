@@ -177,19 +177,19 @@ export default function Home() {
         {/* FINAL CTA */}
         <section className="py-24 bg-white">
           <div className="max-w-4xl mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Join the community of serious builders
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+              You’re Closer Than You Think.
             </h2>
 
             <p className="text-lg text-slate-600 mb-10 max-w-2xl mx-auto">
-              If you're building something real, this is where you belong.
+              To building something that matters.
             </p>
 
             <a
               href="https://play.google.com/store/apps/details?id=app.rork.connektx"
               className="px-8 py-4 text-base font-bold text-white bg-slate-900 rounded-full hover:bg-slate-800 transition shadow-lg"
             >
-              Join Connektx
+              Get Started
             </a>
           </div>
         </section>
