@@ -4,6 +4,7 @@ import FeaturedSection from '@/components/FeaturedSection';
 import CategoryCard from '@/components/CategoryCard';
 import Link from 'next/link';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export const metadata = {
   title: 'Blog Platform - Latest Articles and Stories',
@@ -40,7 +41,7 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-blue-100">
-  <Header />
+      <Header />
 
       <main>
         {/* Featured Blogs Section */}
@@ -95,6 +96,8 @@ export default async function HomePage() {
           </div>
         </section>
       </main>
+
+      <Footer />
     </div>
   );
 }
