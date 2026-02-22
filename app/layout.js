@@ -1,93 +1,56 @@
-// import { Inter } from 'next/font/google'
-// import './globals.css'
-
-// const inter = Inter({ subsets: ['latin'] })
-
-// export const metadata = {
-//   title: {
-//     default: 'Blog Platform - Latest Articles and Stories',
-//     template: '%s | Blog Platform'
-//   },
-//   description: 'Discover the latest articles, insights, and stories from our expert writers.',
-//   keywords: 'blog, articles, stories, insights, latest news',
-//   authors: [{ name: 'Blog Platform' }],
-//   creator: 'Blog Platform',
-//   publisher: 'Blog Platform',
-//   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
-//   openGraph: {
-//     type: 'website',
-//     locale: 'en_US',
-//     url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-//     siteName: 'Blog Platform',
-//     title: 'Blog Platform - Latest Articles and Stories',
-//     description: 'Discover the latest articles, insights, and stories from our expert writers.',
-//   },
-//   twitter: {
-//     card: 'summary_large_image',
-//     title: 'Blog Platform - Latest Articles and Stories',
-//     description: 'Discover the latest articles, insights, and stories from our expert writers.',
-//   },
-//   robots: {
-//     index: true,
-//     follow: true,
-//     googleBot: {
-//       index: true,
-//       follow: true,
-//       'max-video-preview': -1,
-//       'max-image-preview': 'large',
-//       'max-snippet': -1,
-//     },
-//   },
-// }
-
-// export default function RootLayout({ children }) {
-//   return (
-//     <html lang="en">
-//       <body className={inter.className}>{children}</body>
-//     </html>
-//   )
-// }
 import { Inter } from 'next/font/google'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://connektx.com"
+  ),
+
   title: {
-    default: 'Blog Platform - Latest Articles and Stories',
-    template: '%s | Blog Platform'
+    default: "Connektx | Connect. Build. Grow.",
+    template: "%s | Connektx",
   },
-  description: 'Discover the latest articles, insights, and stories from our expert writers.',
-  keywords: 'blog, articles, stories, insights, latest news',
-  authors: [{ name: 'Blog Platform' }],
-  creator: 'Blog Platform',
-  publisher: 'Blog Platform',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+
+  description:
+    "Connektx helps students, founders, and professionals connect with purpose — to build, collaborate, and grow in the startup ecosystem.",
+
+  keywords: [
+    "Connektx",
+    "startup networking",
+    "founders",
+    "students",
+    "collaboration",
+    "entrepreneur community",
+  ],
+
+  authors: [{ name: "Connektx" }],
+  creator: "Connektx",
+  publisher: "Connektx",
+
   openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-    siteName: 'Blog Platform',
-    title: 'Blog Platform - Latest Articles and Stories',
-    description: 'Discover the latest articles, insights, and stories from our expert writers.',
+    type: "website",
+    locale: "en_US",
+    url: "https://connektx.com",
+    siteName: "Connektx",
+    title: "Connektx | Connect. Build. Grow.",
+    description:
+      "Join Connektx to connect with builders, founders, and professionals in the startup ecosystem.",
   },
+
   twitter: {
-    card: 'summary_large_image',
-    title: 'Blog Platform - Latest Articles and Stories',
-    description: 'Discover the latest articles, insights, and stories from our expert writers.',
+    card: "summary_large_image",
+    title: "Connektx | Connect. Build. Grow.",
+    description:
+      "Connect with purpose. Build meaningful collaborations. Grow in the startup world.",
   },
+
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
   },
-}
+};
 
 export default function RootLayout({ children }) {
   return (
