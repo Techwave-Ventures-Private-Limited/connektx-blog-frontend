@@ -7,7 +7,7 @@ import ImagePreview from './ImagePreview';
 export default function CategoryCard({ category }) {
   return (
     <Link
-      href={`/category/${category.slug}`}
+      href={`/categories/${category.slug}`}
       prefetch={false}
       className="group block w-full overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:border-gray-400 hover:shadow-sm"
     >
