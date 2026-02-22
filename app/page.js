@@ -4,6 +4,7 @@ import Script from "next/script";
 import Head from "next/head";
 import Link from "next/link";
 import { LinkedinLogo, FacebookLogo, InstagramLogo } from "phosphor-react";
+import Header from "@/components/Header";
 
 export default function Home() {
   return (
@@ -34,28 +35,7 @@ export default function Home() {
       <main className="bg-white text-slate-800 antialiased font-sans">
 
         {/* NAVBAR */}
-        <nav className="fixed w-full z-50 backdrop-blur-xl bg-white/85 border-b border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-20">
-              <div className="flex items-center gap-2 cursor-pointer">
-                <img src="/images/logo.png" alt="Connektx Logo" className="h-16 w-auto" />
-                <span className="font-bold text-xl tracking-tight">Connektx</span>
-              </div>
-
-              <div className="hidden md:flex items-center space-x-8">
-                <a href="#roles" className="text-sm font-medium text-slate-600 hover:text-sky-600 transition">
-                  For You
-                </a>
-                <a
-                  href="https://play.google.com/store/apps/details?id=app.rork.connektx"
-                  className="px-5 py-2.5 text-sm font-medium text-white bg-slate-900 rounded-full hover:bg-slate-800 transition shadow-lg"
-                >
-                  Join Connektx
-                </a>
-              </div>
-            </div>
-          </div>
-        </nav>
+        < Header />
 
         {/* HERO */}
         <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
