@@ -7,11 +7,11 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 export const metadata = {
-  title: 'Blog Platform - Latest Articles and Stories',
+  title: 'Latest Articles',
   description: 'Discover the latest articles, insights, and stories from our expert writers.',
   keywords: 'blog, articles, stories, insights, latest news',
   openGraph: {
-    title: 'Blog Platform - Latest Articles and Stories',
+    title: 'Latest Articles and Stories',
     description: 'Discover the latest articles, insights, and stories from our expert writers.',
     type: 'website',
   },

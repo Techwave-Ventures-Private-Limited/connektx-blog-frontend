@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 
 export const metadata = {
-  title: 'All Blogs - Blog Platform',
+  title: 'All Blogs',
   description: 'Browse all published articles and blog posts.',
 };
 
