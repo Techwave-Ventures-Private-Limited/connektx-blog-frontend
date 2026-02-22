@@ -61,14 +61,15 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 mb-6 leading-tight">
-              ConnektX <br className="hidden md:block" />
+              A Better Way to Connect <br className="hidden md:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-600">
-                Where Serious Builders Hang Out
+                In the Startup World.
               </span>
             </h1>
 
             <p className="mt-6 text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              Connect. Build. Grow.
+              ConnektX helps students, founders, and professionals connect with purpose —
+              whether you're looking to build, hire, or find your next opportunity.
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
@@ -76,14 +77,17 @@ export default function Home() {
                 href="https://play.google.com/store/apps/details?id=app.rork.connektx"
                 className="px-8 py-3.5 text-base font-semibold text-white bg-sky-600 rounded-full hover:bg-sky-700 transition shadow-xl"
               >
-                Download Now
+                Join ConnektX
               </a>
 
-              <a href="#roles"
-                className="px-8 py-3.5 text-base font-semibold text-slate-700 bg-white border border-slate-200 rounded-full hover:bg-slate-50 transition">
-                How it works
+              <a
+                href="#roles"
+                className="px-8 py-3.5 text-base font-semibold text-slate-700 bg-white border border-slate-200 rounded-full hover:bg-slate-50 transition"
+              >
+                How It Works
               </a>
             </div>
+
           </div>
 
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-sky-50 rounded-full blur-3xl -z-10 opacity-60"></div>
