@@ -68,7 +68,7 @@ export default function Home() {
             </h1>
 
             <p className="mt-6 text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              ConnektX helps students, founders, and professionals connect with purpose —
+              ConnektX helps students, founders, and professionals connect with purpose
               whether you're looking to build, hire, or find your next opportunity.
             </p>
 
@@ -93,48 +93,98 @@ export default function Home() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-sky-50 rounded-full blur-3xl -z-10 opacity-60"></div>
         </section>
 
-        {/* ROLES SECTION */}
+        {/* HOW PEOPLE USE CONNEKTX */}
         <section id="roles" className="py-24 bg-slate-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-slate-900">
-                Who Connektx is For
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
+                How People Use ConnektX
               </h2>
+              <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
+                Whether you're building, hiring, or exploring — it starts with the right connection.
+              </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            {/* 3D Perspective Wrapper */}
+            <div className="grid md:grid-cols-3 gap-8 [perspective:1000px]">
 
-              {/* Students */}
-              <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300">
-                <h3 className="text-xl font-bold mb-3">Students & Freshers</h3>
-                <p className="text-slate-600 text-sm mb-6">
-                  Tired of ghosting? Get real responses and find early-stage opportunities.
-                </p>
-                <a href="https://play.google.com/store/apps/details?id=app.rork.connektx" className="text-orange-600 font-bold text-sm">
-                  Find Opportunities →
-                </a>
+              {/* Card 1 */}
+              <div className="group relative">
+                <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm transition duration-500 ease-out
+                                transform-gpu group-hover:-translate-y-2 
+                                group-hover:rotate-x-2 group-hover:-rotate-y-2 
+                                group-hover:shadow-2xl">
+
+                  <div className="text-3xl mb-6">🤝</div>
+
+                  <h3 className="text-xl font-semibold text-slate-900 mb-3">
+                    Find a Co-Founder
+                  </h3>
+
+                  <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+                    Connect with builders actively working on ideas and looking for collaborators.
+                  </p>
+
+                  <ul className="space-y-2 text-sm text-slate-500">
+                    <li>• Early stage projects</li>
+                    <li>• Skill-based matching</li>
+                    <li>• Direct conversations</li>
+                  </ul>
+
+                </div>
               </div>
 
-              {/* Founders */}
-              <div className="p-8 rounded-3xl bg-white border border-sky-100 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition duration-300">
-                <h3 className="text-xl font-bold mb-3">Founders & Startups</h3>
-                <p className="text-slate-600 text-sm mb-6">
-                  Launch products, hire serious builders, and grow without noise.
-                </p>
-                <a href="https://play.google.com/store/apps/details?id=app.rork.connektx" className="text-sky-600 font-bold text-sm">
-                  Start Building →
-                </a>
+              {/* Card 2 */}
+              <div className="group relative">
+                <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm transition duration-500 ease-out
+                                transform-gpu group-hover:-translate-y-2 
+                                group-hover:rotate-x-2 group-hover:-rotate-y-2 
+                                group-hover:shadow-2xl">
+
+                  <div className="text-3xl mb-6">🚀</div>
+
+                  <h3 className="text-xl font-semibold text-slate-900 mb-3">
+                    Hire Your Team Members
+                  </h3>
+
+                  <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+                    Post opportunities and connect with people who genuinely want to build in startups.
+                  </p>
+
+                  <ul className="space-y-2 text-sm text-slate-500">
+                    <li>• Interns & early hires</li>
+                    <li>• Focused profiles</li>
+                    <li>• Faster responses</li>
+                  </ul>
+
+                </div>
               </div>
 
-              {/* Professionals */}
-              <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300">
-                <h3 className="text-xl font-bold mb-3">Professionals</h3>
-                <p className="text-slate-600 text-sm mb-6">
-                  Showcase your work and tap into the startup ecosystem.
-                </p>
-                <a href="https://play.google.com/store/apps/details?id=app.rork.connektx" className="text-purple-600 font-bold text-sm">
-                  Grow Your Network →
-                </a>
+              {/* Card 3 */}
+              <div className="group relative">
+                <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm transition duration-500 ease-out
+                                transform-gpu group-hover:-translate-y-2 
+                                group-hover:rotate-x-2 group-hover:-rotate-y-2 
+                                group-hover:shadow-2xl">
+
+                  <div className="text-3xl mb-6">🌱</div>
+
+                  <h3 className="text-xl font-semibold text-slate-900 mb-3">
+                    Join an Early-Stage Startup
+                  </h3>
+
+                  <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+                    Discover startups building in public and find meaningful opportunities.
+                  </p>
+
+                  <ul className="space-y-2 text-sm text-slate-500">
+                    <li>• Internships & roles</li>
+                    <li>• Direct founder access</li>
+                    <li>• Real startup exposure</li>
+                  </ul>
+
+                </div>
               </div>
 
             </div>
