@@ -3,7 +3,7 @@
 import { useState, useRef, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Cookies from 'js-cookie';
-import { api } from '@/lib/api';   // still used for categories lookup
+import { api } from '@/lib/api';
 import ImagePreview from './ImagePreview';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
@@ -29,45 +29,40 @@ export default function BlogForm({ categories, onSubmit, submitButtonText, initi
     createdBy:  initialData?.createdBy || username,
     published:  initialData?.published  ?? false,
   });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGeneratingExcerpt, setIsGeneratingExcerpt] = useState(false);
+  const [isUploading, setIsUploading] = useState(false); // new state
 
   // Jodit configuration
-  const config = useMemo(
-    () => ({
-      readonly: false,
-      placeholder: 'Start typing your content...',
-      height: 400,
-      buttons: [
-        'bold', 'italic', 'underline', 'strikethrough', '|',
-        'superscript', 'subscript', '|',
-        'ul', 'ol', '|',
-        'outdent', 'indent', '|',
-        'font', 'fontsize', 'brush', 'paragraph', '|',
-        'image', 'video', 'table', 'link', '|',
-        'left', 'center', 'right', 'justify', '|',
-        'undo', 'redo', '|',
-        'hr', 'eraser', 'copyformat', '|',
-        'symbol', 'fullsize',
-        'print', 'about'
-      ],
-      removeButtons: ['source'],
-      showCharsCounter: true,
-      showWordsCounter: true,
-      showXPathInStatusbar: false,
-      toolbarAdaptive: true,
-      toolbarSticky: false,
-      style: {
-        font: '14px Arial, sans-serif'
-      },
-      uploader: {
-        insertImageAsBase64URI: true,
-      },
-    }),
-    []
-  );
+  const config = useMemo(() => ({
+    readonly: false,
+    placeholder: 'Start typing your content...',
+    height: 400,
+    buttons: [
+      'bold', 'italic', 'underline', 'strikethrough', '|',
+      'superscript', 'subscript', '|',
+      'ul', 'ol', '|',
+      'outdent', 'indent', '|',
+      'font', 'fontsize', 'brush', 'paragraph', '|',
+      'image', 'video', 'table', 'link', '|',
+      'left', 'center', 'right', 'justify', '|',
+      'undo', 'redo', '|',
+      'hr', 'eraser', 'copyformat', '|',
+      'symbol', 'fullsize',
+      'print', 'about'
+    ],
+    removeButtons: ['source'],
+    showCharsCounter: true,
+    showWordsCounter: true,
+    showXPathInStatusbar: false,
+    toolbarAdaptive: true,
+    toolbarSticky: false,
+    style: { font: '14px Arial, sans-serif' },
+    uploader: { insertImageAsBase64URI: true },
+  }), []);
 
-  /* Resolve slug ➜ id */
+  // Handle category selection
   const handleCategoryChange = async (e) => {
     const slug = e.target.value;
     if (!slug) {
@@ -82,38 +77,29 @@ export default function BlogForm({ categories, onSubmit, submitButtonText, initi
     }
   };
 
-  /* Normal input / checkbox handler */
+  // Handle normal inputs
   const handleInput = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((p) => ({ ...p, [name]: type === 'checkbox' ? checked : value }));
   };
 
-  // Jodit content change handler
+  // Jodit content handler
   const handleContent = (html) => setFormData((p) => ({ ...p, content: html }));
 
-  /* ✅ Gemini frontend integration */
+  // Generate excerpt with Gemini AI
   const generateExcerpt = async () => {
     if (!formData.content) return;
     setIsGeneratingExcerpt(true);
-
     try {
-      // Clean HTML → plain text
       const plainText = formData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-      console.log('[Gemini] Input:', plainText);
-
-      // Use Gemini API
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       const prompt = `Summarize the following blog post into a short excerpt of about max 20 words:\n\n${plainText}`;
-
       const result = await model.generateContent(prompt);
       const excerpt = result.response.text().trim();
-
-      console.log('[Gemini] Response:', excerpt);
       setFormData(prev => ({ ...prev, excerpt }));
     } catch (error) {
       console.error('[Gemini] Error generating excerpt:', error);
-
-      // fallback simple excerpt
+      // fallback
       const plainText = formData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
       const words = plainText.split(' ');
       const excerpt = words.slice(0, 25).join(' ');
@@ -123,10 +109,30 @@ export default function BlogForm({ categories, onSubmit, submitButtonText, initi
     }
   };
 
+  // Handle file upload to S3
+  const handleFileUpload = async (file) => {
+    if (!file) return;
+    setIsUploading(true);
+    const formDataUpload = new FormData();
+    formDataUpload.append('file', file);
+
+    try {
+      const res = await api.post('/upload-media', formDataUpload, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setFormData(prev => ({ ...prev, thumbnail: res.data.url }));
+    } catch (err) {
+      console.error('File upload failed:', err);
+      alert('File upload failed. Try again.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // Submit blog
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    console.log('Submitting blog post:', formData);
     try {
       await onSubmit({
         title:      formData.title,
@@ -185,22 +191,7 @@ export default function BlogForm({ categories, onSubmit, submitButtonText, initi
             disabled={isGeneratingExcerpt || !formData.content}
             className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isGeneratingExcerpt ? (
-              <>
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Generating...
-              </>
-            ) : (
-              <>
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
-                Generate with AI
-              </>
-            )}
+            {isGeneratingExcerpt ? 'Generating…' : 'Generate with AI'}
           </button>
         </div>
         <textarea
@@ -212,9 +203,6 @@ export default function BlogForm({ categories, onSubmit, submitButtonText, initi
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
           placeholder="Brief description… or click 'Generate with AI' to auto-generate from content"
         />
-        <p className="mt-1 text-xs text-gray-500">
-          Recommended: 20-25 words. {formData.excerpt ? `Current: ${formData.excerpt.split(' ').length} words` : ''}
-        </p>
       </div>
 
       {/* content */}
@@ -233,16 +221,16 @@ export default function BlogForm({ categories, onSubmit, submitButtonText, initi
 
       {/* thumbnail */}
       <div>
-        <label htmlFor="thumbnail" className="block text-sm font-medium text-gray-700 mb-2">Thumbnail Image URL</label>
+        <label htmlFor="thumbnail" className="block text-sm font-medium text-gray-700 mb-2">Thumbnail Image</label>
         <input
           id="thumbnail"
-          name="thumbnail"
-          type="url"
-          value={formData.thumbnail}
-          onChange={handleInput}
+          type="file"
+          accept="image/*"
+          disabled={isUploading}
+          onChange={(e) => handleFileUpload(e.target.files[0])}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-          placeholder="https://example.com/image.jpg"
         />
+        {isUploading && <p className="text-blue-500 mt-1">Uploading…</p>}
         {formData.thumbnail && (
           <div className="mt-2">
             <p className="text-sm text-gray-600 mb-2">Preview:</p>
@@ -287,7 +275,7 @@ export default function BlogForm({ categories, onSubmit, submitButtonText, initi
       <div className="flex justify-end">
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isUploading}
           className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
         >
           {isSubmitting ? 'Saving…' : submitButtonText}
