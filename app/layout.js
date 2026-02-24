@@ -14,7 +14,7 @@ export const metadata = {
   },
 
   description:
-    "Connektx helps students, founders, and professionals connect with purpose — to build, collaborate, and grow in the startup ecosystem.",
+    "Connektx isn't another social platform. It's an ecosystem for serious builders — builders collaborating, founders discussing product strategy, ambitious minds turning ideas into scalable companies together.",
 
   keywords: [
     "Connektx",
