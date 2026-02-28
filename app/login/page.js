@@ -12,9 +12,6 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
-    // console.log("--- Login Attempt ---");
-    // console.log("Target URL:", process.env.NEXT_PUBLIC_APP_BACKEND_URL);
 
     try {
       const response = await appApi.login(formData.email, formData.password);
