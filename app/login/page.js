@@ -39,7 +39,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#0a0a0a] text-white p-4">
       <div className="w-full max-w-sm bg-[#111] border border-zinc-800 p-8 rounded-2xl shadow-xl">
-        <h2 className="text-2xl font-bold mb-2 text-blue-500 text-center">ConnektX</h2>
+        <h2 className="text-2xl font-bold mb-2 text-blue-500 text-center">Connektx</h2>
         <p className="text-zinc-500 text-center text-sm mb-8">Welcome back, builder.</p>
         
         <form onSubmit={handleLogin} className="space-y-4">
