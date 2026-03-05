@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { appApi } from '@/lib/api';
 import FounderPath from '@/components/FounderPath';
 import BuilderPath from '@/components/BuilderPath';
+import ExplorerPath from '@/components/ExplorerPath';
 import { Rocket, Users, Search, CheckCircle2, ArrowRight } from 'lucide-react';
 
 export default function Onboarding() {
@@ -94,6 +95,10 @@ export default function Onboarding() {
 
               {role === 'Builder' && (
                 <BuilderPath onComplete={handleFinalSubmit} loading={loading} />
+              )}
+
+              {role === 'Explorer' && (
+                <ExplorerPath onComplete={handleFinalSubmit} loading={loading} />
               )}
             </div>
           </div>
