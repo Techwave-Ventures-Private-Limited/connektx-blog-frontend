@@ -85,7 +85,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/adminAuth';
 import { adminApi, publicApi } from '@/lib/api';
 import AdminLayout from '@/components/AdminLayout';
 import BlogForm from '@/components/BlogForm';

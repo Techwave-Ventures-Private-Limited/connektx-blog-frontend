@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/adminAuth';
 import Link from 'next/link';
 
 export default function AdminLogin() {

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import LoadingScreen from '@/components/LoadingScreen';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/adminAuth';
 import { publicApi, adminApi } from '@/lib/api';
 import AdminLayout from '@/components/AdminLayout';
 import { Plus, Edit, Trash2, Eye, Star } from 'lucide-react';
