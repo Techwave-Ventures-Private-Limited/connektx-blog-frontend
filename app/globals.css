@@ -51,12 +51,17 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Force all editable text to be black */
+/* Allow editable text to follow theme colors */
 input, 
 textarea, 
 select,
 [contenteditable="true"] {
-  color: #000000 !important;
+  color: inherit;
+}
+
+/* Explicit fallback for readability if background is dark */
+.dark-theme-text {
+  color: #ffffff !important;
 }
 
 /* Specific input types */
@@ -67,7 +72,7 @@ input[type="number"],
 input[type="search"],
 input[type="url"],
 input[type="tel"] {
-  color: #000000 !important;
+  color: inherit;
 }
 
 /* Focus states */
@@ -75,7 +80,7 @@ input:focus,
 textarea:focus,
 select:focus,
 [contenteditable="true"]:focus {
-  color: #000000 !important;
+  color: inherit;
 }
 
 /* Disabled and readonly states */
@@ -84,20 +89,20 @@ textarea:disabled,
 select:disabled,
 input:read-only,
 textarea:read-only {
-  color: #000000 !important;
+  color: inherit;
 }
 
 /* Placeholder styling - keep as gray for visibility */
 ::placeholder {
-  color: #666666;
-  opacity: 1;
+  color: #94a3b8;
+  opacity: 0.6;
 }
 
 /* Autofill styling (Chrome/Safari) */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-  -webkit-text-fill-color: #000000 !important;
+  -webkit-text-fill-color: inherit;
 }
 
 @keyframes fadein {
