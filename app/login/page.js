@@ -1,7 +1,7 @@
 "use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { appApi } from '@/lib/blogApi';
+import { appApi } from '@/lib/appApi';
 import Link from 'next/link';
 import { LogIn, Mail, Lock, ArrowRight } from 'lucide-react';
 
