@@ -21,13 +21,17 @@ export default function Onboarding() {
   const handleFinalSubmit = async (onboardingData) => {
     setLoading(true);
     try {
-      const response = await appApi.signup({ ...onboardingData, type: role });
-      if (response.data.success || response.status === 201) {
+      // CHANGE THIS: Use saveOnboarding instead of signup
+      // This sends the data to your new Onboarding collection/endpoint
+      const response = await appApi.saveOnboarding(onboardingData, role);
+      
+      if (response.data.success || response.status === 200) {
         setStep(3);
       }
     } catch (err) {
       console.error("Submission Error:", err.response?.data || err.message);
-      alert("Failed to save profile. Please check the console.");
+      // provide more specific error feedback
+      alert(err.response?.data?.message || "Failed to save profile.");
     } finally {
       setLoading(false);
     }
