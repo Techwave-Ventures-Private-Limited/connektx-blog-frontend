@@ -110,7 +110,7 @@ import { useState, useEffect } from 'react';
 import LoadingScreen from '@/components/LoadingScreen';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/adminAuth';
-import { adminApi } from '@/lib/api';
+import { adminApi } from '@/lib/blogApi';
 import AdminLayout from '@/components/AdminLayout';
 import { Save, Image } from 'lucide-react';
 import ImagePreview from '@/components/ImagePreview';

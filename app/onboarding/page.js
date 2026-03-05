@@ -1,7 +1,7 @@
 "use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { appApi } from '@/lib/api';
+import { appApi } from '@/lib/blogApi';
 import FounderPath from '@/components/FounderPath';
 import BuilderPath from '@/components/BuilderPath';
 import ExplorerPath from '@/components/ExplorerPath';

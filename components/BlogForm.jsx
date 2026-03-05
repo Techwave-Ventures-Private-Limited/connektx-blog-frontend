@@ -3,7 +3,7 @@
 import { useState, useRef, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Cookies from 'js-cookie';
-import { api } from '@/lib/api';
+import { api } from '@/lib/blogApi';
 import ImagePreview from './ImagePreview';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 

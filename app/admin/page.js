@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import LoadingScreen from '@/components/LoadingScreen';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/adminAuth';
-import { publicApi } from '@/lib/api';
+import { publicApi } from '@/lib/blogApi';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { FileText, FolderOpen, Users, Eye } from 'lucide-react';
 import AdminLayout from '@/components/AdminLayout';

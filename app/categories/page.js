@@ -1,4 +1,4 @@
-import { publicApi } from '@/lib/api';
+import { publicApi } from '@/lib/blogApi';
 import Header from '@/components/Header';
 import CategoryCard from '@/components/CategoryCard';
 

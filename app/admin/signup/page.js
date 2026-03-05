@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { adminApi as api} from '@/lib/api'; // ⬅️ using your api wrapper
+import { adminApi as api} from '@/lib/blogApi'; // ⬅️ using your api wrapper
 
 export default function SignupPage() {
   const router = useRouter();

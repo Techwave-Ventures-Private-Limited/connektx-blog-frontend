@@ -1,7 +1,7 @@
 "use client";
 
 
-import { publicApi as api } from '@/lib/api';
+import { publicApi as api } from '@/lib/blogApi';
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import BlogCard from '@/components/BlogCard';

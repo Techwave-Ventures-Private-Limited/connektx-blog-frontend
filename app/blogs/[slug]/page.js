@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { publicApi } from '@/lib/api';
+import { publicApi } from '@/lib/blogApi';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import { Calendar, Eye, ArrowLeft } from 'lucide-react';
