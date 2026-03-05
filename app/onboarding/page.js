@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { appApi } from '@/lib/api';
 import FounderPath from '@/components/FounderPath';
-// import JoinerPath from '@/components/JoinerPath'; // Create these next
+import BuilderPath from '@/components/BuilderPath';
 // import ExplorerPath from '@/components/ExplorerPath';
 
 export default function Onboarding() {
@@ -64,10 +64,7 @@ export default function Onboarding() {
             )}
 
             {role === 'Builder' && (
-              <div className="text-center p-10 bg-[#111] rounded-2xl border border-zinc-800">
-                <p className="text-zinc-500">Builder/Joiner path coming soon...</p>
-                <button onClick={() => setStep(1)} className="mt-4 text-blue-500 text-sm">Go Back</button>
-              </div>
+              <BuilderPath onComplete={handleFinalSubmit} loading={loading} />
             )}
             
             {/* Add ExplorerPath here later */}
