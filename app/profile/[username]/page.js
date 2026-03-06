@@ -12,7 +12,7 @@ import {
 
 // 1. DYNAMIC SEO & METADATA
 export async function generateMetadata({ params }) {
-  const { username } = params;
+  const { username } = await params;
   try {
     const data = await userApi.getProfileByUsername(username);
     const user = data.body;
@@ -24,12 +24,12 @@ export async function generateMetadata({ params }) {
       },
     };
   } catch (e) {
-    return { title: 'Profile | Connektx' };
+    return { title: 'Profile' };
   }
 }
 
 export default async function ProfilePage({ params }) {
-  const { username } = params;
+  const { username } = await params;
   let user;
 
   try {
