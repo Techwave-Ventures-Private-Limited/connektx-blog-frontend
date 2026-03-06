@@ -31,7 +31,7 @@ export default function AppDownloadDialog({ isOpen, onClose }) {
 
         <h2 className="text-2xl font-bold mb-2">Profile Created!</h2>
         <p className="text-slate-500 text-sm mb-8 leading-relaxed">
-          Your journey starts here. Download the app for the full experience.
+          The website is a basic view of your profile<br />Download our app to unlock full potential.
         </p>
 
         <div className="flex flex-col gap-4">
