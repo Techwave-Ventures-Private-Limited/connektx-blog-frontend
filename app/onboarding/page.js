@@ -104,32 +104,6 @@ export default function Onboarding() {
             </div>
           </div>
         )}
-
-        {/* STEP 3: APP DOWNLOAD PROMPT */}
-        {step === 3 && (
-          <div className="text-center animate-in slide-in-from-bottom-12 duration-700 max-w-md mx-auto">
-            <div className="mb-8 relative inline-block">
-              <div className="absolute -inset-4 bg-blue-500/20 rounded-full blur-xl animate-pulse"></div>
-              <div className="relative bg-slate-950 border border-blue-500/30 p-6 rounded-full inline-block">
-                <CheckCircle2 className="w-16 h-16 text-blue-400" />
-              </div>
-            </div>
-
-            <h2 className="text-4xl font-black tracking-tight mb-4">Profile Created!</h2>
-            <p className="text-slate-400 mb-10 text-lg font-medium">Your journey starts here. Download the app for the full experience.</p>
-
-            <button
-              onClick={() => router.push('/explore')}
-              className="group/btn relative w-full p-5 rounded-2xl font-black text-white overflow-hidden transition-all shadow-2xl shadow-blue-600/20"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:from-blue-50 hover:to-indigo-500 transition-all"></div>
-              <span className="relative flex items-center justify-center gap-2">
-                Go to Explore Page
-                <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-              </span>
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
