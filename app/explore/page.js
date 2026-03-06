@@ -1,12 +1,13 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { userApi } from '@/lib/userApi';
 import { MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import AppDownloadDialog from '@/components/AppDownloadDialog';
 
-export default function ExplorePage() {
+// 1. Move the search params logic into a separate internal component
+function ExploreContent() {
   const searchParams = useSearchParams();
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [users, setUsers] = useState([]);
@@ -48,7 +49,7 @@ export default function ExplorePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black pt-24 pb-12 text-white">
+    <>
       <AppDownloadDialog 
         isOpen={showSuccessDialog} 
         onClose={() => setShowSuccessDialog(false)} 
@@ -82,10 +83,26 @@ export default function ExplorePage() {
           )}
         </div>
       </div>
+    </>
+  );
+}
+
+// 2. Wrap the content in a Suspense boundary in the default export
+export default function ExplorePage() {
+  return (
+    <div className="min-h-screen bg-black pt-24 pb-12 text-white">
+      <Suspense fallback={
+        <div className="flex items-center justify-center h-full">
+          <p className="text-slate-500 text-xs uppercase tracking-widest">Initializing Ecosystem...</p>
+        </div>
+      }>
+        <ExploreContent />
+      </Suspense>
     </div>
   );
 }
 
+// 3. UserCard stays exactly as it was
 function UserCard({ user }) {
   const details = user.onboardingDetails || {};
   
@@ -145,7 +162,7 @@ function UserCard({ user }) {
             <button 
               className="flex items-center gap-2 text-[10px] font-bold text-white hover:text-slate-400 transition-colors uppercase tracking-widest"
               onClick={(e) => {
-                e.preventDefault(); // Prevents card link navigation
+                e.preventDefault();
                 // Add message logic here
               }}
             >
