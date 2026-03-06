@@ -36,8 +36,13 @@ export default function Signup() {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await appApi.signup(formData);
-      if (data.token) {
+      // 1. Await the signup process
+      const response = await appApi.signup(formData);
+      
+      // 2. Check the correct response structure
+      if (response.data?.success || response.data?.token) {
+        console.log("Signup successful, token saved to cookies.");
+        // Use window.location.href to ensure the middleware picks up the new cookie
         window.location.href = '/onboarding';
       }
     } catch (err) {
