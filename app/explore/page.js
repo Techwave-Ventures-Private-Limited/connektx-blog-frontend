@@ -3,16 +3,26 @@ import { useState, useEffect } from 'react';
 import { userApi } from '@/lib/userApi';
 import { MessageSquare } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import AppDownloadDialog from '@/components/AppDownloadDialog';
 
 export default function ExplorePage() {
+  const searchParams = useSearchParams();
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
+    // Check if we just came from onboarding
+    if (searchParams.get('onboarded') === 'true') {
+      setShowSuccessDialog(true);
+      // Optional: Clean up URL without refreshing
+      window.history.replaceState({}, '', '/explore');
+    }
     fetchUsers(1, true);
-  }, []);
+  }, [searchParams]);
 
   const fetchUsers = async (pageNum, isInitial = false) => {
     setLoading(true);
@@ -39,6 +49,10 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen bg-black pt-24 pb-12 text-white">
+      <AppDownloadDialog 
+        isOpen={showSuccessDialog} 
+        onClose={() => setShowSuccessDialog(false)} 
+      />
       <div className="max-w-6xl mx-auto px-6">
         
         {/* MINIMALIST HEADER */}
