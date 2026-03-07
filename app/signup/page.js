@@ -3,16 +3,16 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { appApi } from '@/lib/appApi';
 import Link from 'next/link';
-import { User, Mail, Lock, CheckCircle, ArrowRight, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { User, Mail, Lock, CheckCircle, ArrowRight, ArrowLeft, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 
 export default function Signup() {
   const [step, setStep] = useState(1); // 1: Details, 2: OTP Verification
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: '', email: '', password: '', confirmPassword: '', otp: '', referralCode: ''
   });
 
-  // Step 1: Validate details and request OTP
   const handleRequestOTP = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
@@ -31,17 +31,14 @@ export default function Signup() {
     }
   };
 
-  // Step 2: Finalize signup with the OTP
   const handleFinalSignup = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      // 1. Await the signup process
       const response = await appApi.signup(formData);
       
-      // 2. Check the correct response structure
       if (response.data?.success || response.data?.token) {
-
+        // META PIXEL TRACKING
         if (typeof window !== 'undefined' && window.fbq) {
           window.fbq('track', 'CompleteRegistration', {
             content_name: 'Connektx Signup',
@@ -51,7 +48,6 @@ export default function Signup() {
           });
         }
         console.log("Signup successful, token saved to cookies.");
-        // Use window.location.href to ensure the middleware picks up the new cookie
         window.location.href = '/onboarding';
       }
     } catch (err) {
@@ -62,142 +58,144 @@ export default function Signup() {
     }
   };
 
+  // Minimalist Input Style matching your Explore/Login aesthetic
   const inputStyle = `
-    w-full bg-slate-900/40 border border-blue-500/10 p-4 pl-12 rounded-2xl outline-none 
-    focus:border-blue-400/50 focus:bg-slate-900/60 text-white placeholder-slate-500
-    transition-all backdrop-blur-md shadow-lg shadow-blue-500/5
-    [-webkit-text-fill-color:white] 
-    [transition:background-color_5000s_ease-in-out_0s,border_0.2s_ease,box-shadow_0.2s_ease]
-    autofill:shadow-[0_0_0_30px_#0a0c14_inset]
+    w-full bg-black border border-white/10 p-4 pl-12 rounded-sm outline-none 
+    focus:border-white/30 text-white placeholder-slate-600
+    transition-all text-sm tracking-widest
   `;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#07090e] text-white p-4 relative overflow-hidden">
-      {/* Background Decorative Elements */}
-      <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/10 rounded-full blur-[120px] animate-pulse"></div>
-      <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-600/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-6">
+      
+      <div className="w-full max-w-sm">
+        {/* Header Section */}
+        <div className="mb-12 border-b border-white/10 pb-8 items-center text-center">
+          <h1 className="text-3xl font-bold tracking-tight uppercase">Create Account</h1>
+          <p className="text-slate-500 text-xs mt-2 uppercase tracking-widest">
+            {step === 1 ? "Start your journey as a builder." : "Verify your identity."}
+          </p>
+        </div>
 
-      <div className="w-full max-w-lg relative group">
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-400 rounded-3xl blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
-        <div className="relative bg-slate-950/90 backdrop-blur-2xl border border-blue-500/10 p-10 rounded-3xl shadow-3xl animate-in fade-in zoom-in-95 duration-700">
-          <div className="mb-10 text-center md:text-left">
-            <h1 className="text-4xl font-black tracking-tighter text-white mb-2 bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-slate-500">Connektx</h1>
-            <p className="text-slate-400 text-sm font-medium">Start your journey as a builder.</p>
-          </div>
+        {step === 1 ? (
+          /* STEP 1: COLLECT ALL DETAILS */
+          <form onSubmit={handleRequestOTP} className="space-y-6">
+            <div className="relative">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2">
+                <User className="w-4 h-4 text-slate-600" />
+              </div>
+              <input
+                type="text" placeholder="Full Name" required
+                className={inputStyle}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              />
+            </div>
 
-          {step === 1 ? (
-            /* STEP 1: COLLECT ALL DETAILS */
-            <form onSubmit={handleRequestOTP} className="space-y-4">
-              <div className="relative group/input">
-                <div className="absolute left-4 top-4 p-0.5">
-                  <User className="w-5 h-5 text-slate-500 group-focus-within/input:text-blue-400 transition-colors" />
-                </div>
-                <input
-                  type="text" placeholder="Full Name" required
-                  className={inputStyle}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                />
+            <div className="relative">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2">
+                <Mail className="w-4 h-4 text-slate-600" />
               </div>
-              <div className="relative group/input">
-                <div className="absolute left-4 top-4 p-0.5">
-                  <Mail className="w-5 h-5 text-slate-500 group-focus-within/input:text-blue-400 transition-colors" />
-                </div>
-                <input
-                  type="email" placeholder="Email Address" required
-                  className={inputStyle}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value.trim() })}
-                />
+              <input
+                type="email" placeholder="Email" required
+                className={inputStyle}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value.trim() })}
+              />
+            </div>
+
+            <div className="relative">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2">
+                <Lock className="w-4 h-4 text-slate-600" />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="relative group/input">
-                  <div className="absolute left-4 top-4 p-0.5">
-                    <Lock className="w-5 h-5 text-slate-500 group-focus-within/input:text-blue-400 transition-colors" />
-                  </div>
-                  <input
-                    type="password" placeholder="Password" required
-                    className={inputStyle}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  />
-                </div>
-                <div className="relative group/input">
-                  <div className="absolute left-4 top-4 p-0.5">
-                    <ShieldCheck className="w-5 h-5 text-slate-500 group-focus-within/input:text-blue-400 transition-colors" />
-                  </div>
-                  <input
-                    type="password" placeholder="Confirm" required
-                    className={inputStyle}
-                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  />
-                </div>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                required
+                className={inputStyle}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-white transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+
+            <div className="relative">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2">
+                <ShieldCheck className="w-4 h-4 text-slate-600" />
               </div>
+              <input
+                type="password" placeholder="Confirm Password" required
+                className={inputStyle}
+                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+              />
+            </div>
+
+            <button
+              disabled={loading}
+              className="w-full bg-white text-black hover:bg-slate-200 py-4 rounded-sm font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em]"
+            >
+              {loading ? (
+                <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin"></div>
+              ) : (
+                <>
+                  Get Code <ArrowRight className="w-3 h-3" />
+                </>
+              )}
+            </button>
+          </form>
+        ) : (
+          /* STEP 2: ENTER OTP */
+          <form onSubmit={handleFinalSignup} className="space-y-8 text-center">
+            <div className="bg-white/5 border border-white/10 p-6 rounded-sm">
+              <p className="text-[10px] text-slate-500 uppercase tracking-widest mb-2">Code sent to</p>
+              <p className="text-white font-bold text-xs">{formData.email}</p>
+            </div>
+
+            <input
+              type="text"
+              placeholder="000000"
+              required
+              maxLength={6}
+              className="w-full bg-black border border-white/10 p-6 rounded-sm outline-none focus:border-white/30 text-center tracking-[1em] font-mono text-2xl text-white block transition-all"
+              onChange={(e) => setFormData({ ...formData, otp: e.target.value })}
+            />
+
+            <div className="flex flex-col gap-4">
               <button
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white p-4.5 rounded-2xl font-bold mt-4 transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-xl shadow-blue-600/20 group/btn"
+                className="w-full bg-white text-black hover:bg-slate-200 py-4 rounded-sm font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em]"
               >
                 {loading ? (
-                  <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                  <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin"></div>
                 ) : (
                   <>
-                    Get Verification Code
-                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                    Verify & Join <CheckCircle className="w-3 h-3" />
                   </>
                 )}
               </button>
-            </form>
-          ) : (
-            /* STEP 2: ENTER OTP */
-            <form onSubmit={handleFinalSignup} className="space-y-8 text-center">
-              <div className="bg-blue-500/10 border border-blue-500/20 p-6 rounded-2xl backdrop-blur-md">
-                <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-500/30">
-                  <Mail className="w-6 h-6 text-blue-400" />
-                </div>
-                <p className="text-sm text-slate-400">
-                  Verification code sent to <br />
-                  <span className="text-white font-bold">{formData.email}</span>
-                </p>
-              </div>
 
-              <div className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="000 000"
-                  required
-                  maxLength={6}
-                  className="w-full bg-slate-900/40 border border-blue-500/20 p-6 rounded-2xl outline-none focus:border-blue-400/50 text-center tracking-[0.5em] font-mono text-3xl text-white block transition-all backdrop-blur-md"
-                  onChange={(e) => setFormData({ ...formData, otp: e.target.value })}
-                />
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="text-[10px] text-slate-600 hover:text-white uppercase tracking-widest flex items-center justify-center gap-2 transition-colors"
+              >
+                <ArrowLeft className="w-3 h-3" /> Edit Details
+              </button>
+            </div>
+          </form>
+        )}
 
-                <div className="flex flex-col gap-3">
-                  <button
-                    disabled={loading}
-                    className="w-full bg-white text-black hover:bg-slate-200 p-4.5 rounded-2xl font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-xl shadow-white/5"
-                  >
-                    {loading ? (
-                      <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin"></div>
-                    ) : (
-                      <>
-                        <CheckCircle className="w-4 h-4" />
-                        Verify & Create Account
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setStep(1)}
-                    className="text-xs text-slate-500 hover:text-white transition-colors flex items-center justify-center gap-1 group/back"
-                  >
-                    <ArrowLeft className="w-3 h-3 group-hover/back:-translate-x-1 transition-transform" />
-                    Back to details
-                  </button>
-                </div>
-              </div>
-            </form>
-          )}
-
-          <p className="mt-10 text-center text-slate-500 text-sm font-medium">
-            Already have an account? <Link href="/login" className="text-white hover:text-blue-400 transition-colors underline underline-offset-4 decoration-white/20">Log in</Link>
+        {/* Footer/Switch Link */}
+        <div className="mt-12 pt-8 border-t border-white/5 text-center">
+          <p className="text-slate-600 text-[10px] uppercase tracking-widest mb-4">
+            Already have an account?
           </p>
+          <Link href="/login" className="text-white hover:text-slate-400 text-xs font-bold uppercase tracking-widest transition-colors">
+            Login
+          </Link>
         </div>
       </div>
     </div>
