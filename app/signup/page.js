@@ -47,7 +47,7 @@ export default function Signup() {
             content_name: 'Connektx Signup',
             status: true,
             value: 0.00,
-            currency: 'USD'
+            currency: 'INR'
           });
         }
         console.log("Signup successful, token saved to cookies.");
