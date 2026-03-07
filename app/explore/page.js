@@ -141,7 +141,7 @@ function UserCard({ user }) {
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-bold truncate">{user.name}</h3>
             <p className="text-[10px] text-slate-500 uppercase tracking-widest leading-none mt-1">
-              {details.role || user.type}
+              {details.role || user.headline || user.type}
             </p>
           </div>
         </div>
@@ -151,7 +151,7 @@ function UserCard({ user }) {
           <div>
             <p className="text-slate-600 uppercase font-bold tracking-tighter mb-1">Building</p>
             <p className="text-slate-300 leading-relaxed line-clamp-2">
-              {details.building || user.headline || "Product details not provided."}
+              {details.building || user.bio || "Product details not provided."}
             </p>
           </div>
 
