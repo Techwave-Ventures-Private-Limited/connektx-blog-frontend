@@ -70,7 +70,7 @@ export default function RootLayout({ children }) {
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '439392249067743'); 
+            fbq('init', '1644750570206674'); 
             fbq('track', 'PageView');
           `}
         </Script>
