@@ -5,10 +5,10 @@ import { appApi } from '@/lib/appApi';
 import FounderPath from '@/components/FounderPath';
 import BuilderPath from '@/components/BuilderPath';
 import ExplorerPath from '@/components/ExplorerPath';
-import { Rocket, Users, Search, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Rocket, Users, Search, ArrowRight } from 'lucide-react';
 
 export default function Onboarding() {
-  const [step, setStep] = useState(1); // 1: Role Selection, 2: Questions, 3: App CTA
+  const [step, setStep] = useState(1); 
   const [role, setRole] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -23,7 +23,6 @@ export default function Onboarding() {
     try {
       const response = await appApi.saveOnboarding(onboardingData, role);
       if (response.data.success || response.status === 200) {
-        // Redirect to explore with a success flag
         router.push('/explore?onboarded=true');
       }
     } catch (err) {
@@ -35,45 +34,38 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-white flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      {/* Background Glows */}
-      <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-blue-600/5 rounded-full blur-[120px]"></div>
-      <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-indigo-600/5 rounded-full blur-[120px]"></div>
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
+      
+      <div className="w-full max-w-5xl relative">
 
-      <div className="w-full max-w-2xl relative">
-
-        {/* STEP 1: ROLE SELECTION */}
+        {/* STEP 1: ROLE SELECTION (One Row Layout) */}
         {step === 1 && (
-          <div className="text-center animate-in fade-in zoom-in duration-700">
-            <div className="mb-12">
-              <h1 className="text-5xl font-black tracking-tighter mb-3 bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-slate-500">Connektx</h1>
-              <p className="text-slate-400 font-medium text-lg">Tell us what brings you here today.</p>
+          <div className="animate-in fade-in duration-700">
+            <div className="mb-16 border-b border-white/10 pb-8 flex flex-col items-center text-center">
+              <h1 className="text-4xl font-bold tracking-tight uppercase">Connektx</h1>
+              <p className="text-slate-500 text-xs mt-2 uppercase tracking-[0.3em]">
+                Select your path in the ecosystem
+              </p>
             </div>
 
-            <div className="grid gap-5 md:grid-cols-1 max-w-lg mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <RoleCard
-                title="I am a Founder"
-                desc="I am building a startup and need a team."
-                icon={<Rocket className="w-6 h-6 text-blue-400" />}
+                title="Founder"
+                desc="Building a startup and looking for a team."
+                icon={<Rocket className="w-5 h-5" />}
                 onClick={() => handleRoleSelect('Founder')}
-                gradient="from-blue-600/20 to-indigo-600/20"
-                borderColor="border-blue-500/20"
               />
               <RoleCard
-                title="I am a Builder"
-                desc="I want to join a project and contribute skills."
-                icon={<Users className="w-6 h-6 text-cyan-400" />}
+                title="Builder"
+                desc="Contribute skills to ambitious projects."
+                icon={<Users className="w-5 h-5" />}
                 onClick={() => handleRoleSelect('Builder')}
-                gradient="from-cyan-600/20 to-blue-600/20"
-                borderColor="border-cyan-500/20"
               />
               <RoleCard
-                title="Just Exploring"
-                desc="I want to see what others are building."
-                icon={<Search className="w-6 h-6 text-slate-400" />}
+                title="Explorer"
+                desc="Discover what others are creating."
+                icon={<Search className="w-5 h-5" />}
                 onClick={() => handleRoleSelect('Explorer')}
-                gradient="from-slate-800/40 to-slate-900/40"
-                borderColor="border-slate-700/30"
               />
             </div>
           </div>
@@ -81,23 +73,21 @@ export default function Onboarding() {
 
         {/* STEP 2: BRANCHED QUESTIONS */}
         {step === 2 && (
-          <div className="animate-in fade-in zoom-in-95 duration-700 w-full">
-            <div className="text-center mb-10">
-              <span className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-500/20 mb-4 inline-block">
-                Onboarding: {role}
+          <div className="animate-in fade-in duration-700 w-full max-w-xl mx-auto">
+            <div className="mb-12 border-b border-white/10 pb-8 flex flex-col items-center text-center">
+              <span className="px-3 py-1 border border-white/10 text-slate-500 rounded-sm text-[10px] font-bold uppercase tracking-widest mb-4">
+                {role} Profile
               </span>
-              <h2 className="text-3xl font-black tracking-tight">Tell us more, {role}</h2>
+              <h2 className="text-2xl font-bold uppercase tracking-tight">Provide Details</h2>
             </div>
 
-            <div className="bg-slate-950/20 backdrop-blur-sm rounded-3xl p-2">
+            <div className="bg-black border border-white/5 rounded-sm p-4">
               {role === 'Founder' && (
                 <FounderPath onComplete={handleFinalSubmit} loading={loading} />
               )}
-
               {role === 'Builder' && (
                 <BuilderPath onComplete={handleFinalSubmit} loading={loading} />
               )}
-
               {role === 'Explorer' && (
                 <ExplorerPath onComplete={handleFinalSubmit} loading={loading} />
               )}
@@ -109,24 +99,26 @@ export default function Onboarding() {
   );
 }
 
-function RoleCard({ title, desc, onClick, icon, gradient, borderColor }) {
+function RoleCard({ title, desc, onClick, icon }) {
   return (
     <button
       onClick={onClick}
-      className={`relative w-full text-left p-6 bg-slate-950/60 backdrop-blur-xl border ${borderColor} rounded-3xl hover:border-blue-400/50 transition-all group overflow-hidden shadow-xl hover:shadow-blue-500/10`}
+      className="relative flex flex-col items-center text-center p-8 bg-black border border-white/10 rounded-sm hover:border-white/40 transition-all group h-full"
     >
-      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
-      <div className="relative flex items-start gap-5">
-        <div className="p-3 bg-slate-900 rounded-2xl border border-white/5 group-hover:scale-110 transition-transform duration-500 shadow-inner">
-          {icon}
-        </div>
-        <div>
-          <h3 className="text-xl font-black group-hover:text-white transition-colors tracking-tight">{title}</h3>
-          <p className="text-slate-500 group-hover:text-slate-300 mt-1.5 text-sm font-medium transition-colors leading-relaxed">{desc}</p>
-        </div>
-        <div className="ml-auto self-center opacity-0 group-hover:opacity-100 group-hover:translate-x-0 -translate-x-4 transition-all duration-500">
-          <ArrowRight className="w-5 h-5 text-blue-400" />
-        </div>
+      <div className="mb-6 p-4 border border-white/5 rounded-full group-hover:border-white/20 transition-all bg-white/5">
+        {icon}
+      </div>
+      
+      <h3 className="text-lg font-bold uppercase tracking-widest mb-3">
+        {title}
+      </h3>
+      
+      <p className="text-slate-500 text-[11px] leading-relaxed uppercase tracking-wider mb-8">
+        {desc}
+      </p>
+
+      <div className="mt-auto flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 group-hover:text-white transition-colors">
+        Select Path <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
       </div>
     </button>
   );
