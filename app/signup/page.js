@@ -65,6 +65,8 @@ export default function Signup() {
     transition-all text-sm tracking-widest
   `;
 
+  const passwordsMatch = formData.password && formData.confirmPassword && (formData.password === formData.confirmPassword);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-6">
       
@@ -127,10 +129,18 @@ export default function Signup() {
                 <ShieldCheck className="w-4 h-4 text-slate-600" />
               </div>
               <input
-                type="password" placeholder="Confirm Password" required
-                className={inputStyle}
+                type="password"
+                placeholder="Confirm Password"
+                required
+                className={`${inputStyle} ${passwordsMatch ? 'border-green-500/50 focus:border-green-500' : ''}`}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
               />
+              {/* Green Tick Animation */}
+              {passwordsMatch && (
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 animate-in zoom-in fade-in duration-300">
+                  <CheckCircle className="w-4 h-4 text-green-500" />
+                </div>
+              )}
             </div>
 
             <button
