@@ -41,6 +41,15 @@ export default function Signup() {
       
       // 2. Check the correct response structure
       if (response.data?.success || response.data?.token) {
+
+        if (typeof window !== 'undefined' && window.fbq) {
+          window.fbq('track', 'CompleteRegistration', {
+            content_name: 'Connektx Signup',
+            status: true,
+            value: 0.00,
+            currency: 'USD'
+          });
+        }
         console.log("Signup successful, token saved to cookies.");
         // Use window.location.href to ensure the middleware picks up the new cookie
         window.location.href = '/onboarding';
