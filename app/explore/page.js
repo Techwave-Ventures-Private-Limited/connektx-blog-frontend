@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, Suspense } from 'react';
 import { userApi } from '@/lib/userApi';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, Download } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import AppDownloadDialog from '@/components/AppDownloadDialog';
@@ -48,18 +48,37 @@ function ExploreContent() {
     fetchUsers(nextPage);
   };
 
+  const redirectToPlaystore = () => {
+    window.open("https://play.google.com/store/apps/details?id=app.rork.connektx", "_blank");
+  };
+
   return (
     <>
       <AppDownloadDialog 
         isOpen={showSuccessDialog} 
         onClose={() => setShowSuccessDialog(false)} 
       />
+      
+      {/* 3rd FIX: DOWNLOAD BUTTON IN UPPER RIGHT */}
+      <div className="fixed top-8 right-8 z-50">
+        <button 
+          onClick={redirectToPlaystore}
+          className="flex items-center gap-2 px-4 py-2 border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all rounded-sm backdrop-blur-md"
+        >
+          Download App <Download size={14} />
+        </button>
+      </div>
+
       <div className="max-w-6xl mx-auto px-6">
         
-        {/* MINIMALIST HEADER */}
-        <div className="mb-12 border-b border-white/10 pb-8">
-          <h1 className="text-3xl font-bold tracking-tight uppercase">Explore</h1>
-          <p className="text-slate-500 text-sm mt-2">Connect with the Connektx network.</p>
+        {/* 1st FIX: REDUCED TOP MARGIN/GAP */}
+        <div className="mb-12 border-b border-white/10 pb-8 w-full text-left">
+          <h1 className="text-3xl font-bold tracking-tight uppercase text-white">
+            Explore
+          </h1>
+          <p className="text-slate-500 text-[10px] mt-2 uppercase tracking-[0.3em]">
+            Connect with the Connektx network.
+          </p>
         </div>
 
         {/* 3-COLUMN GRID */}
@@ -90,7 +109,8 @@ function ExploreContent() {
 // 2. Wrap the content in a Suspense boundary in the default export
 export default function ExplorePage() {
   return (
-    <div className="min-h-screen bg-black pt-24 pb-12 text-white">
+    /* 1st FIX: REDUCED TOP PADDING FROM pt-24 TO pt-12 */
+    <div className="min-h-screen bg-black pt-12 pb-12 text-white">
       <Suspense fallback={
         <div className="flex items-center justify-center h-full">
           <p className="text-slate-500 text-xs uppercase tracking-widest">Initializing Ecosystem...</p>
@@ -112,9 +132,10 @@ function UserCard({ user }) {
         
         {/* HEADER: IMAGE & IDENTITY */}
         <div className="flex items-center gap-4 mb-6">
+          {/* 2nd FIX: REMOVED grayscale CLASS */}
           <img 
             src={user.profileImage || '/default-avatar.png'} 
-            className="w-14 h-14 rounded-sm object-cover grayscale hover:grayscale-0 transition-all border border-white/5"
+            className="w-14 h-14 rounded-sm object-cover border border-white/5"
             alt={user.name}
           />
           <div className="flex-1 min-w-0">
