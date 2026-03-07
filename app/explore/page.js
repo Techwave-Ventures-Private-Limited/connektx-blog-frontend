@@ -140,7 +140,7 @@ function UserCard({ user }) {
           />
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-bold truncate">{user.name}</h3>
-            <p className="text-[10px] text-slate-500 uppercase tracking-widest leading-none mt-1">
+            <p className="text-[10px] text-slate-500 uppercase tracking-widest leading-none mt-1 truncate">
               {details.role || user.headline || user.type}
             </p>
           </div>
