@@ -40,7 +40,7 @@ export default function Login() {
       
       <div className="w-full max-w-sm">
         {/* Header Section */}
-        <div className="mb-12 border-b border-white/10 pb-8">
+        <div className="mb-12 border-b border-white/10 pb-8 items-center text-center">
           <h1 className="text-3xl font-bold tracking-tight uppercase">Login</h1>
           <p className="text-slate-500 text-xs mt-2 uppercase tracking-widest">
             Welcome back to the network.
