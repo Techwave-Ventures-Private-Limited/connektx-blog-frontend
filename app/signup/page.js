@@ -40,6 +40,14 @@ export default function Signup() {
       if (response.data?.success || response.data?.token) {
         // META PIXEL TRACKING
         if (typeof window !== 'undefined' && window.fbq) {
+
+          window.fbq('track', 'Subscribe', {
+            content_name: 'Connektx Network Membership',
+            status: 'Active',
+            value: 0.00,
+            currency: 'INR'
+          });
+          
           window.fbq('track', 'CompleteRegistration', {
             content_name: 'Connektx Signup',
             status: true,
