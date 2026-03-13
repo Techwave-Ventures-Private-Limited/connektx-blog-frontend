@@ -48,12 +48,6 @@ export default function Signup() {
             currency: 'INR'
           });
           
-          window.fbq('track', 'CompleteRegistration', {
-            content_name: 'Connektx Signup',
-            status: true,
-            value: 0.00,
-            currency: 'INR'
-          });
         }
         console.log("Signup successful, token saved to cookies.");
         window.location.href = '/onboarding';
