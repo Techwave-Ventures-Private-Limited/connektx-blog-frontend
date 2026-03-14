@@ -102,6 +102,16 @@ function ExploreContent() {
           )}
         </div>
       </div>
+
+      {/* CHAT FAB */}
+      <Link
+        href="/conversations"
+        className="fixed bottom-12 right-12 z-50 w-14 h-14 flex items-center justify-center
+        bg-white text-black rounded-full shadow-lg
+        hover:scale-105 transition-all duration-200"
+      >
+        <MessageSquare size={22} />
+      </Link>
     </>
   );
 }
