@@ -54,12 +54,12 @@ export default function Home() {
               whether you're looking to build, hire, or find your next opportunity.
             </p>
 
-            <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
                 href="https://play.google.com/store/apps/details?id=app.rork.connektx"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-sky-600 rounded-full hover:bg-sky-700 transition shadow-lg"
+                className="flex items-center gap-2 px-8 py-3.5 text-base font-semibold text-white bg-sky-600 rounded-full hover:bg-sky-700 transition shadow-lg"
               >
                 <FaGooglePlay className="text-lg" />
                 Download App
