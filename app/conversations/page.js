@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { messageApi } from "@/lib/messageApi";
@@ -131,6 +131,8 @@ function ChatWindow({ chat }) {
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState("");
   const [loadingMessages, setLoadingMessages] = useState(true);
+  const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   useEffect(() => {
 
@@ -153,6 +155,10 @@ function ChatWindow({ chat }) {
     }
 
   }, [chat]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+  }, [messages]);
 
   const sendMessage = async () => {
     if (!messageText.trim()) return;
@@ -190,41 +196,48 @@ function ChatWindow({ chat }) {
 
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
-  
-      {loadingMessages ? (
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto p-6 space-y-4"
+      >
+
+        {loadingMessages ? (
           <p className="text-xs text-slate-500 uppercase tracking-widest">
-          Loading messages...
+            Loading messages...
           </p>
-      ) : messages.length === 0 ? (
+        ) : messages.length === 0 ? (
           <p className="text-xs text-slate-500 uppercase tracking-widest">
-          No messages yet
+            No messages yet
           </p>
-      ) : (
-            messages.map((msg) => {
+        ) : (
 
-                const senderId = msg.sender?._id || msg.sender;
-                const otherUserId = chat.participants?.[0]?._id;
+          messages.map((msg) => {
 
-                const isMe = senderId !== otherUserId;
+            const senderId = msg.sender?._id || msg.sender;
+            const otherUserId = chat.participants?.[0]?._id;
 
-                return (
-                    <div
-                    key={msg._id}
-                    className={`max-w-xs px-4 py-2 rounded-lg text-sm ${
-                        isMe
-                        ? "bg-slate-800 ml-auto"
-                        : "bg-white text-black"
-                    }`}
-                    >
-                    {msg.message || msg.content}
-                    </div>
-                );
-            })
+            const isMe = senderId !== otherUserId;
 
+            return (
+              <div
+                key={msg._id}
+                className={`max-w-xs px-4 py-2 rounded-lg text-sm ${
+                  isMe
+                    ? "bg-slate-800 ml-auto"
+                    : "bg-white text-black"
+                }`}
+              >
+                {msg.message || msg.content}
+              </div>
+            );
 
-      )}
-  
+          })
+
+        )}
+
+        {/* 🔹 Scroll anchor */}
+        <div ref={messagesEndRef} />
+
       </div>
 
 
