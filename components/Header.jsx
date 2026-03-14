@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { FaGooglePlay } from "react-icons/fa";
 
 export default function Header() {
   return (
@@ -30,15 +29,13 @@ export default function Header() {
               Articles
             </Link>
 
-            <a
-              href="https://play.google.com/store/apps/details?id=app.rork.connektx"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-sky-600 rounded-full hover:bg-sky-700 transition shadow-lg"
+            {/* Login Button */}
+            <Link
+              href="/login"
+              className="px-5 py-2.5 text-sm font-medium text-white bg-sky-600 rounded-full hover:bg-sky-700 transition shadow-lg"
             >
-              <FaGooglePlay className="text-lg" />
-              Download App
-            </a>
+              Login
+            </Link>
           </div>
 
         </div>
