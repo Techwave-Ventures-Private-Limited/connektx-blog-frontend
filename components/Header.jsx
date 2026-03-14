@@ -34,7 +34,7 @@ export default function Header() {
               href="https://play.google.com/store/apps/details?id=app.rork.connektx"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-full hover:bg-blue-600 transition shadow-lg"
+              className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-sky-600 rounded-full hover:bg-sky-700 transition shadow-lg"
             >
               <FaGooglePlay className="text-lg" />
               Download App

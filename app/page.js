@@ -4,6 +4,7 @@ import Script from "next/script";
 import Head from "next/head";
 import Link from "next/link";
 import { LinkedinLogo, FacebookLogo, InstagramLogo } from "phosphor-react";
+import { FaGooglePlay } from "react-icons/fa";
 import Header from "@/components/Header";
 
 export default function Home() {
@@ -56,9 +57,12 @@ export default function Home() {
             <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
               <a
                 href="https://play.google.com/store/apps/details?id=app.rork.connektx"
-                className="px-8 py-3.5 text-base font-semibold text-white bg-sky-600 rounded-full hover:bg-sky-700 transition shadow-xl"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-sky-600 rounded-full hover:bg-sky-700 transition shadow-lg"
               >
-                Join ConnektX
+                <FaGooglePlay className="text-lg" />
+                Download App
               </a>
 
               <a
