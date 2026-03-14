@@ -124,10 +124,35 @@ export default function ConversationsPage() {
 }
 
 
-
 function ChatWindow({ chat }) {
 
   const user = chat?.participants?.[0];
+
+  const [messages, setMessages] = useState([]);
+  const [loadingMessages, setLoadingMessages] = useState(true);
+
+  useEffect(() => {
+
+    const fetchMessages = async () => {
+
+      try {
+        setLoadingMessages(true);
+        const res = await messageApi.getMessages(chat._id);
+        setMessages(res.body?.messages || []);
+      } catch (error) {
+        console.error("Failed to fetch messages:", error);
+      } finally {
+        setLoadingMessages(false);
+      }
+
+    };
+
+    if (chat?._id) {
+      fetchMessages();
+    }
+
+  }, [chat]);
+
 
   return (
     <div className="flex flex-col h-full">
@@ -150,15 +175,40 @@ function ChatWindow({ chat }) {
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-6 space-y-4">
+  
+      {loadingMessages ? (
+          <p className="text-xs text-slate-500 uppercase tracking-widest">
+          Loading messages...
+          </p>
+      ) : messages.length === 0 ? (
+          <p className="text-xs text-slate-500 uppercase tracking-widest">
+          No messages yet
+          </p>
+      ) : (
+            messages.map((msg) => {
 
-        <div className="max-w-xs bg-white text-black px-4 py-2 rounded-lg text-sm">
-          Hey! I saw your profile on Connektx.
-        </div>
+                const senderId = msg.sender?._id || msg.sender;
+                const otherUserId = chat.participants?.[0]?._id;
 
-        <div className="max-w-xs bg-slate-800 px-4 py-2 rounded-lg text-sm ml-auto">
-          Thanks! What are you building?
-        </div>
+                const isMe = senderId !== otherUserId;
 
+                return (
+                    <div
+                    key={msg._id}
+                    className={`max-w-xs px-4 py-2 rounded-lg text-sm ${
+                        isMe
+                        ? "bg-slate-800 ml-auto"
+                        : "bg-white text-black"
+                    }`}
+                    >
+                    {msg.message || msg.content}
+                    </div>
+                );
+            })
+
+
+      )}
+  
       </div>
 
 
