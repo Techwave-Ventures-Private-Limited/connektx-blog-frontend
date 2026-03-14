@@ -5,6 +5,7 @@ import { MessageSquare, Download } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import AppDownloadDialog from '@/components/AppDownloadDialog';
+import ChatFAB from '@/components/chatFab';
 
 // 1. Move the search params logic into a separate internal component
 function ExploreContent() {
@@ -104,14 +105,7 @@ function ExploreContent() {
       </div>
 
       {/* CHAT FAB */}
-      <Link
-        href="/conversations"
-        className="fixed bottom-12 right-12 z-50 w-14 h-14 flex items-center justify-center
-        bg-white text-black rounded-full shadow-lg
-        hover:scale-105 transition-all duration-200"
-      >
-        <MessageSquare size={22} />
-      </Link>
+      <ChatFAB />
     </>
   );
 }
