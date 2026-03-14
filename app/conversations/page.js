@@ -129,6 +129,7 @@ function ChatWindow({ chat }) {
   const user = chat?.participants?.[0];
 
   const [messages, setMessages] = useState([]);
+  const [messageText, setMessageText] = useState("");
   const [loadingMessages, setLoadingMessages] = useState(true);
 
   useEffect(() => {
@@ -152,6 +153,21 @@ function ChatWindow({ chat }) {
     }
 
   }, [chat]);
+
+  const sendMessage = async () => {
+    if (!messageText.trim()) return;
+    try {
+        const res = await messageApi.sendMessage(chat._id, {
+        content: messageText
+        });
+        const newMessage = res.body;
+        setMessages((prev) => [...prev, newMessage]);
+        setMessageText("");
+    } catch (error) {
+        console.error("Send message failed:", error);
+    }
+  };
+
 
 
   return (
@@ -216,11 +232,17 @@ function ChatWindow({ chat }) {
       <div className="p-4 border-t border-white/10 flex gap-3">
 
         <input
-          placeholder="Type a message..."
-          className="flex-1 bg-black border border-white/10 px-4 py-2 text-sm outline-none focus:border-white/30"
+            value={messageText}
+            onChange={(e) => setMessageText(e.target.value)}
+            onKeyDown={(e) => {if (e.key === "Enter") sendMessage();}}
+            placeholder="Type a message..."
+            className="flex-1 bg-black border border-white/10 px-4 py-2 text-sm outline-none focus:border-white/30"
         />
 
-        <button className="px-6 py-2 bg-white text-black text-sm font-semibold hover:bg-slate-200 transition">
+        <button 
+          onClick={sendMessage}
+          className="px-6 py-2 bg-white text-black text-sm font-semibold hover:bg-slate-200 transition"
+        >
           Send
         </button>
 
