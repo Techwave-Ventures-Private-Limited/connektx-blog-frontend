@@ -1,12 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { messageApi } from "@/lib/messageApi";
 
 export default function ConversationsPage() {
 
   const [selectedChat, setSelectedChat] = useState(null);
+  const [conversations, setConversations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+
+    const fetchConversations = async () => {
+      try {
+        const res = await messageApi.getConversations();
+        setConversations(res.body || []);
+      } catch (error) {
+        console.error("Failed to fetch conversations:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchConversations();
+
+  }, []);
+
 
   return (
     <div className="h-screen bg-black text-white flex">
@@ -28,25 +49,45 @@ export default function ConversationsPage() {
         {/* Conversations List */}
         <div className="flex-1 overflow-y-auto">
 
-          {/* Dummy conversation */}
-          <button
-            onClick={() => setSelectedChat("john")}
-            className="w-full text-left px-6 py-4 border-b border-white/5 hover:bg-white/5 transition flex items-center gap-3"
-          >
-            <img
-              src="/default-avatar.png"
-              className="w-10 h-10 rounded-sm object-cover"
-            />
+          {loading ? (
+            <p className="p-6 text-xs text-slate-500 uppercase tracking-widest">
+              Loading conversations...
+            </p>
+          ) : conversations.length === 0 ? (
+            <p className="p-6 text-xs text-slate-500 uppercase tracking-widest">
+              No conversations yet
+            </p>
+          ) : (
+            conversations.map((conv) => {
 
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold truncate">
-                John Doe
-              </p>
-              <p className="text-xs text-slate-500 truncate">
-                Last message preview...
-              </p>
-            </div>
-          </button>
+              const user = conv.participants?.[0];
+
+              return (
+                <button
+                  key={conv._id}
+                  onClick={() => setSelectedChat(conv)}
+                  className="w-full text-left px-6 py-4 border-b border-white/5 hover:bg-white/5 transition flex items-center gap-3"
+                >
+                  <img
+                    src={user?.profileImage || "/default-avatar.png"}
+                    className="w-10 h-10 rounded-sm object-cover"
+                    alt={user?.name}
+                  />
+
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold truncate">
+                      {user?.name}
+                    </p>
+
+                    <p className="text-xs text-slate-500 truncate">
+                      {conv.lastMessage?.content || "Start conversation"}
+                    </p>
+                  </div>
+
+                </button>
+              );
+            })
+          )}
 
         </div>
 
@@ -72,7 +113,7 @@ export default function ConversationsPage() {
 
         ) : (
 
-          <ChatWindow />
+          <ChatWindow chat={selectedChat} />
 
         )}
 
@@ -83,21 +124,33 @@ export default function ConversationsPage() {
 }
 
 
-function ChatWindow() {
+
+function ChatWindow({ chat }) {
+
+  const user = chat?.participants?.[0];
+
   return (
     <div className="flex flex-col h-full">
 
       {/* Chat Header */}
-      <div className="p-6 border-b border-white/10">
+      <div className="p-6 border-b border-white/10 flex items-center gap-3">
+
+        <img
+          src={user?.profileImage || "/default-avatar.png"}
+          className="w-8 h-8 rounded-sm"
+          alt={user?.name}
+        />
+
         <h2 className="text-sm font-bold uppercase tracking-widest">
-          John Doe
+          {user?.name}
         </h2>
+
       </div>
+
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-6 space-y-4">
 
-        {/* Message Bubble */}
         <div className="max-w-xs bg-white text-black px-4 py-2 rounded-lg text-sm">
           Hey! I saw your profile on Connektx.
         </div>
@@ -107,6 +160,7 @@ function ChatWindow() {
         </div>
 
       </div>
+
 
       {/* Message Input */}
       <div className="p-4 border-t border-white/10 flex gap-3">
