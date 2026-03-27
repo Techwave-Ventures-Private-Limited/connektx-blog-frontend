@@ -4,6 +4,8 @@ import { ChevronRight, ChevronLeft, Search, Heart, Compass } from 'lucide-react'
 
 export default function ExplorerPath({ onComplete, loading }) {
   const [explorerStep, setExplorerStep] = useState(1);
+
+  // FORM STATE
   const [data, setData] = useState({
     currentRole: '',
     skills: '',
@@ -17,13 +19,42 @@ export default function ExplorerPath({ onComplete, loading }) {
   const next = () => setExplorerStep(s => s + 1);
   const back = () => setExplorerStep(s => s - 1);
 
-  // Minimalist architectural style matching Founder/Builder
+  // ================= VALIDATION HELPERS =================
+
+  // Utility to check empty values
+  const isEmpty = (value) => !value || value.toString().trim() === "";
+
+  // Step 1 validation (ALL required)
+  const validateStep1 = () => {
+    return (
+      !isEmpty(data.currentRole) &&
+      !isEmpty(data.skills) &&
+      !isEmpty(data.experience) &&
+      !isEmpty(data.projects)
+    );
+  };
+
+  // Step 2 validation (ALL required)
+  const validateStep2 = () => {
+    return (
+      !isEmpty(data.helpOthers) &&
+      !isEmpty(data.whyHere) &&
+      !isEmpty(data.expectations)
+    );
+  };
+
+  // ================= STYLES =================
+
   const inputStyle = "w-full bg-black border border-white/10 p-4 rounded-sm outline-none focus:border-white/30 text-white placeholder-slate-700 mb-6 transition-all text-sm tracking-widest";
   const labelStyle = "text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-2 block";
 
+  // Error border styling
+  const errorBorder = (value) => isEmpty(value) ? 'border-red-500' : '';
+
   return (
     <div className="w-full max-w-xl mx-auto">
-      {/* Progress Bar - Minimalist Thin Line */}
+
+      {/* Progress Bar */}
       <div className="flex gap-2 mb-12 px-1">
         {[1, 2].map(step => (
           <div
@@ -35,7 +66,7 @@ export default function ExplorerPath({ onComplete, loading }) {
         ))}
       </div>
 
-      {/* STEP 1: IDENTITY */}
+      {/* ================= STEP 1 ================= */}
       {explorerStep === 1 && (
         <div className="animate-in fade-in duration-500">
           <div className="flex justify-between items-end mb-10 border-b border-white/5 pb-6">
@@ -50,50 +81,53 @@ export default function ExplorerPath({ onComplete, loading }) {
           </div>
           
           <div className="space-y-1">
+
             <label className={labelStyle}>Current Role *</label>
             <input 
-              className={inputStyle} 
-              placeholder="E.G. DESIGNER, INVESTOR, ENTHUSIAST" 
+              required
+              className={`${inputStyle} ${errorBorder(data.currentRole)}`}
               value={data.currentRole} 
               onChange={(e) => setData({...data, currentRole: e.target.value})} 
             />
 
             <label className={labelStyle}>Skills / Expertise *</label>
             <input 
-              className={inputStyle} 
-              placeholder="E.G. PRODUCT MGMT, MARKETING" 
+              required
+              className={`${inputStyle} ${errorBorder(data.skills)}`}
               value={data.skills} 
               onChange={(e) => setData({...data, skills: e.target.value})} 
             />
 
-            <label className={labelStyle}>Experience Level</label>
+            <label className={labelStyle}>Experience Level *</label>
             <input 
-              className={inputStyle} 
-              placeholder="E.G. 5 YEARS, CAREER SPANNING" 
+              required
+              className={`${inputStyle} ${errorBorder(data.experience)}`}
               value={data.experience} 
               onChange={(e) => setData({...data, experience: e.target.value})} 
             />
 
-            <label className={labelStyle}>Notable Projects / Background</label>
+            <label className={labelStyle}>Notable Projects / Background *</label>
             <textarea 
-              className={inputStyle} 
+              required
               rows={2} 
-              placeholder="PAST WORK OR ACHIEVEMENTS..." 
+              className={`${inputStyle} ${errorBorder(data.projects)}`}
               value={data.projects} 
               onChange={(e) => setData({...data, projects: e.target.value})} 
             />
           </div>
 
+          {/* Disable Next until valid */}
           <button 
-            onClick={next} 
-            className="w-full bg-white text-black hover:bg-slate-200 py-4 rounded-sm font-bold mt-4 transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em]"
+            onClick={next}
+            disabled={!validateStep1()}
+            className="w-full bg-white text-black hover:bg-slate-200 py-4 rounded-sm font-bold mt-4 transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em] disabled:opacity-50"
           >
             Next: Community Goals <ChevronRight className="w-3 h-3" />
           </button>
         </div>
       )}
 
-      {/* STEP 2: CONTRIBUTION & INTENT */}
+      {/* ================= STEP 2 ================= */}
       {explorerStep === 2 && (
         <div className="animate-in fade-in duration-500">
           <div className="flex justify-between items-end mb-10 border-b border-white/5 pb-6">
@@ -107,29 +141,29 @@ export default function ExplorerPath({ onComplete, loading }) {
             <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Step 02</span>
           </div>
 
-          <label className={labelStyle}>How can you help others?</label>
+          <label className={labelStyle}>How can you help others? *</label>
           <textarea 
-            className={inputStyle} 
+            required
             rows={2} 
-            placeholder="MENTORSHIP, FEEDBACK, NETWORKING..." 
+            className={`${inputStyle} ${errorBorder(data.helpOthers)}`}
             value={data.helpOthers} 
             onChange={(e) => setData({...data, helpOthers: e.target.value})} 
           />
 
-          <label className={labelStyle}>Why are you here?</label>
+          <label className={labelStyle}>Why are you here? *</label>
           <textarea 
-            className={inputStyle} 
+            required
             rows={2} 
-            placeholder="FINDING INSPIRATION, MEETING FOUNDERS..." 
+            className={`${inputStyle} ${errorBorder(data.whyHere)}`}
             value={data.whyHere} 
             onChange={(e) => setData({...data, whyHere: e.target.value})} 
           />
 
-          <label className={labelStyle}>What do you expect from this platform?</label>
+          <label className={labelStyle}>What do you expect from this platform? *</label>
           <textarea 
-            className={inputStyle} 
+            required
             rows={3} 
-            placeholder="HIGH-SIGNAL FEED, LEARNING, CONNECTING..." 
+            className={`${inputStyle} ${errorBorder(data.expectations)}`}
             value={data.expectations} 
             onChange={(e) => setData({...data, expectations: e.target.value})} 
           />
@@ -138,9 +172,11 @@ export default function ExplorerPath({ onComplete, loading }) {
             <button onClick={back} className="flex-1 border border-white/10 hover:border-white/30 text-slate-400 hover:text-white py-4 rounded-sm font-bold transition-all flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.2em]">
               <ChevronLeft className="w-3 h-3" /> Back
             </button>
+
+            {/* Final submit only if valid */}
             <button 
-              disabled={loading}
-              onClick={() => onComplete(data)} 
+              disabled={!validateStep2() || loading}
+              onClick={() => validateStep2() && onComplete(data)} 
               className="flex-[2] bg-white text-black hover:bg-slate-200 py-4 rounded-sm font-bold disabled:opacity-50 transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em]"
             >
               {loading ? "SAVING..." : "Complete & Explore"}
