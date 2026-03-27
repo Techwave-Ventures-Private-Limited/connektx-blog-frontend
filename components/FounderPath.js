@@ -4,6 +4,8 @@ import { ChevronRight, ChevronLeft, Rocket, Target, Users } from 'lucide-react';
 
 export default function FounderPath({ onComplete, loading }) {
   const [founderStep, setFounderStep] = useState(1);
+
+  // FORM STATE
   const [data, setData] = useState({
     startupName: '', building: '', role: '', website: '',
     stage: 'Ideation', funding: 'Bootstrapped',
@@ -14,13 +16,53 @@ export default function FounderPath({ onComplete, loading }) {
   const next = () => setFounderStep(s => s + 1);
   const back = () => setFounderStep(s => s - 1);
 
-  // Minimalist style matching Explore/Auth
+  // ================= VALIDATION HELPERS =================
+
+  // Utility to check empty values
+  const isEmpty = (value) => !value || value.toString().trim() === "";
+
+  // Step 1 validation
+  const validateStep1 = () => {
+    return (
+      !isEmpty(data.startupName) &&
+      !isEmpty(data.building) &&
+      !isEmpty(data.role) &&
+      // !isEmpty(data.website) &&
+      data.stage &&
+      data.funding
+    );
+  };
+
+  // Step 2 validation
+  const validateStep2 = () => {
+    return (
+      !isEmpty(data.targetAudience) &&
+      !isEmpty(data.location)
+    );
+  };
+
+  // Step 3 validation
+  const validateStep3 = () => {
+    return (
+      !isEmpty(data.teamSize) &&
+      !isEmpty(data.lookingFor) &&
+      data.commitment &&
+      data.compensation
+    );
+  };
+
+  // ================= STYLES =================
+
   const inputStyle = "w-full bg-black border border-white/10 p-4 rounded-sm outline-none focus:border-white/30 text-white placeholder-slate-700 mb-6 transition-all text-sm tracking-widest";
   const labelStyle = "text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-2 block";
 
+  // Dynamic error border styling
+  const errorBorder = (value) => isEmpty(value) ? 'border-red-500' : '';
+
   return (
     <div className="w-full max-w-xl mx-auto">
-      {/* Progress Bar - Minimalist Thin Line */}
+
+      {/* Progress Bar */}
       <div className="flex gap-2 mb-12 px-1">
         {[1, 2, 3].map(step => (
           <div
@@ -32,7 +74,7 @@ export default function FounderPath({ onComplete, loading }) {
         ))}
       </div>
 
-      {/* STEP 1: THE STARTUP */}
+      {/* ================= STEP 1 ================= */}
       {founderStep === 1 && (
         <div className="animate-in fade-in duration-500">
           <div className="flex justify-between items-end mb-10 border-b border-white/5 pb-6">
@@ -47,27 +89,53 @@ export default function FounderPath({ onComplete, loading }) {
           </div>
 
           <div className="space-y-1">
+
             <label className={labelStyle}>Startup Name *</label>
-            <input className={inputStyle} placeholder="CONNEKTX" value={data.startupName} onChange={(e) => setData({ ...data, startupName: e.target.value })} />
+            <input
+              required
+              className={`${inputStyle} ${errorBorder(data.startupName)}`}
+              value={data.startupName}
+              onChange={(e) => setData({ ...data, startupName: e.target.value })}
+            />
 
             <label className={labelStyle}>What are you building? *</label>
-            <textarea className={inputStyle} rows={3} placeholder="A SHORT PITCH..." value={data.building} onChange={(e) => setData({ ...data, building: e.target.value })} />
+            <textarea
+              required
+              rows={3}
+              className={`${inputStyle} ${errorBorder(data.building)}`}
+              value={data.building}
+              onChange={(e) => setData({ ...data, building: e.target.value })}
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className={labelStyle}>Your Role *</label>
-                <input className={inputStyle} placeholder="E.G. FOUNDER & COO" value={data.role} onChange={(e) => setData({ ...data, role: e.target.value })} />
+                <input
+                  required
+                  className={`${inputStyle} ${errorBorder(data.role)}`}
+                  value={data.role}
+                  onChange={(e) => setData({ ...data, role: e.target.value })}
+                />
               </div>
               <div>
-                <label className={labelStyle}>Website</label>
-                <input className={inputStyle} placeholder="HTTPS://..." value={data.website} onChange={(e) => setData({ ...data, website: e.target.value })} />
+                <label className={labelStyle}>Website [Optional]</label>
+                <input
+                  className={`${inputStyle} ${errorBorder(data.website)}`}
+                  value={data.website}
+                  onChange={(e) => setData({ ...data, website: e.target.value })}
+                />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <label className={labelStyle}>Stage</label>
-                <select className={inputStyle} value={data.stage} onChange={(e) => setData({ ...data, stage: e.target.value })}>
+                <label className={labelStyle}>Stage *</label>
+                <select
+                  required
+                  className={inputStyle}
+                  value={data.stage}
+                  onChange={(e) => setData({ ...data, stage: e.target.value })}
+                >
                   <option value="Ideation">IDEATION</option>
                   <option value="Validation">VALIDATION</option>
                   <option value="MVP">MVP</option>
@@ -75,8 +143,13 @@ export default function FounderPath({ onComplete, loading }) {
                 </select>
               </div>
               <div>
-                <label className={labelStyle}>Funding</label>
-                <select className={inputStyle} value={data.funding} onChange={(e) => setData({ ...data, funding: e.target.value })}>
+                <label className={labelStyle}>Funding *</label>
+                <select
+                  required
+                  className={inputStyle}
+                  value={data.funding}
+                  onChange={(e) => setData({ ...data, funding: e.target.value })}
+                >
                   <option value="Bootstrapped">BOOTSTRAPPED</option>
                   <option value="Funded">FUNDED</option>
                   <option value="Grant">GRANT</option>
@@ -85,13 +158,18 @@ export default function FounderPath({ onComplete, loading }) {
             </div>
           </div>
 
-          <button onClick={next} className="w-full bg-white text-black hover:bg-slate-200 py-4 rounded-sm font-bold mt-4 transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em]">
+          {/* Disable Next until valid */}
+          <button
+            onClick={next}
+            disabled={!validateStep1()}
+            className="w-full bg-white text-black hover:bg-slate-200 py-4 rounded-sm font-bold mt-4 transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em] disabled:opacity-50"
+          >
             Next: Market Focus <ChevronRight className="w-3 h-3" />
           </button>
         </div>
       )}
 
-      {/* STEP 2: AUDIENCE & LOCATION */}
+      {/* ================= STEP 2 ================= */}
       {founderStep === 2 && (
         <div className="animate-in fade-in duration-500">
           <div className="flex justify-between items-end mb-10 border-b border-white/5 pb-6">
@@ -105,24 +183,41 @@ export default function FounderPath({ onComplete, loading }) {
             <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Step 02</span>
           </div>
 
-          <label className={labelStyle}>Target Audience</label>
-          <textarea className={inputStyle} rows={4} placeholder="E.G. SAAS FOUNDERS, GEN-Z BUILDERS..." value={data.targetAudience} onChange={(e) => setData({ ...data, targetAudience: e.target.value })} />
+          <label className={labelStyle}>Target Audience *</label>
+          <textarea
+            required
+            rows={4}
+            className={`${inputStyle} ${errorBorder(data.targetAudience)}`}
+            value={data.targetAudience}
+            onChange={(e) => setData({ ...data, targetAudience: e.target.value })}
+          />
 
-          <label className={labelStyle}>Location / Market</label>
-          <input className={inputStyle} placeholder="E.G. GLOBAL, REMOTE, PUNE" value={data.location} onChange={(e) => setData({ ...data, location: e.target.value })} />
+          <label className={labelStyle}>Location / Market *</label>
+          <input
+            required
+            className={`${inputStyle} ${errorBorder(data.location)}`}
+            value={data.location}
+            onChange={(e) => setData({ ...data, location: e.target.value })}
+          />
 
           <div className="flex gap-4 mt-8">
             <button onClick={back} className="flex-1 border border-white/10 hover:border-white/30 text-slate-400 hover:text-white py-4 rounded-sm font-bold transition-all flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.2em]">
               <ChevronLeft className="w-3 h-3" /> Back
             </button>
-            <button onClick={next} className="flex-[2] bg-white text-black hover:bg-slate-200 py-4 rounded-sm font-bold transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em]">
+
+            {/* Disable Next until valid */}
+            <button
+              onClick={next}
+              disabled={!validateStep2()}
+              className="flex-[2] bg-white text-black hover:bg-slate-200 py-4 rounded-sm font-bold transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em] disabled:opacity-50"
+            >
               Next: Team Needs <ChevronRight className="w-3 h-3" />
             </button>
           </div>
         </div>
       )}
 
-      {/* STEP 3: TEAM & COMPENSATION */}
+      {/* ================= STEP 3 ================= */}
       {founderStep === 3 && (
         <div className="animate-in fade-in duration-500">
           <div className="flex justify-between items-end mb-10 border-b border-white/5 pb-6">
@@ -136,23 +231,45 @@ export default function FounderPath({ onComplete, loading }) {
             <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Step 03</span>
           </div>
 
-          <label className={labelStyle}>Current Team Size</label>
-          <input className={inputStyle} type="number" placeholder="1" value={data.teamSize} onChange={(e) => setData({ ...data, teamSize: e.target.value })} />
+          <label className={labelStyle}>Current Team Size *</label>
+          <input
+            required
+            type="number"
+            className={`${inputStyle} ${errorBorder(data.teamSize)}`}
+            value={data.teamSize}
+            onChange={(e) => setData({ ...data, teamSize: e.target.value })}
+          />
 
-          <label className={labelStyle}>What are you looking for?</label>
-          <textarea className={inputStyle} rows={4} placeholder="E.G. FOUNDING CTO, DESIGN PARTNER..." value={data.lookingFor} onChange={(e) => setData({ ...data, lookingFor: e.target.value })} />
+          <label className={labelStyle}>What are you looking for? *</label>
+          <textarea
+            required
+            rows={4}
+            className={`${inputStyle} ${errorBorder(data.lookingFor)}`}
+            value={data.lookingFor}
+            onChange={(e) => setData({ ...data, lookingFor: e.target.value })}
+          />
 
           <div className="grid grid-cols-2 gap-6 mt-2">
             <div>
-              <label className={labelStyle}>Commitment Type</label>
-              <select className={inputStyle} value={data.commitment} onChange={(e) => setData({ ...data, commitment: e.target.value })}>
+              <label className={labelStyle}>Commitment Type *</label>
+              <select
+                required
+                className={inputStyle}
+                value={data.commitment}
+                onChange={(e) => setData({ ...data, commitment: e.target.value })}
+              >
                 <option value="Full-time">FULL-TIME</option>
                 <option value="Part-time">PART-TIME</option>
               </select>
             </div>
             <div>
-              <label className={labelStyle}>Compensation</label>
-              <select className={inputStyle} value={data.compensation} onChange={(e) => setData({ ...data, compensation: e.target.value })}>
+              <label className={labelStyle}>Compensation *</label>
+              <select
+                required
+                className={inputStyle}
+                value={data.compensation}
+                onChange={(e) => setData({ ...data, compensation: e.target.value })}
+              >
                 <option value="Equity">EQUITY</option>
                 <option value="Salary">SALARY</option>
               </select>
@@ -163,9 +280,11 @@ export default function FounderPath({ onComplete, loading }) {
             <button onClick={back} className="flex-1 border border-white/10 hover:border-white/30 text-slate-400 hover:text-white py-4 rounded-sm font-bold transition-all flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.2em]">
               <ChevronLeft className="w-3 h-3" /> Back
             </button>
+
+            {/* Final submit only if valid */}
             <button 
-              onClick={() => onComplete(data)} 
-              disabled={loading}
+              onClick={() => validateStep3() && onComplete(data)}
+              disabled={!validateStep3() || loading}
               className="flex-[2] bg-white text-black hover:bg-slate-200 py-4 rounded-sm font-bold transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em] disabled:opacity-50"
             >
               {loading ? "SAVING..." : "Complete & Explore"}
