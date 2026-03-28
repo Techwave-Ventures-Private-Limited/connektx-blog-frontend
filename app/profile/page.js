@@ -20,6 +20,9 @@ import {
   Trash2,
   Loader2,
 } from "lucide-react";
+import ExperienceList from "@/components/profile/ExperienceList";
+import EducationList from "@/components/profile/EducationList";
+import { formatDateRange } from "@/components/profile/historyUtils";
 
 const emptyProfile = {
   name: "",
@@ -43,20 +46,7 @@ function toDateInput(value) {
   return d.toISOString().slice(0, 10);
 }
 
-function formatDateRange(startDate, endDate, current) {
-  const start = startDate ? new Date(startDate) : null;
-  const end = endDate ? new Date(endDate) : null;
-  const startLabel = start
-    ? start.toLocaleDateString("en-US", { month: "short", year: "numeric" })
-    : "";
-  const endLabel = current
-    ? "Present"
-    : end
-    ? end.toLocaleDateString("en-US", { month: "short", year: "numeric" })
-    : "";
-  if (!startLabel && !endLabel) return "";
-  return `${startLabel}${startLabel && endLabel ? " • " : ""}${endLabel}`;
-}
+// formatDateRange shared in components/profile/historyUtils.js
 
 export default function SelfProfilePage() {
   const [loading, setLoading] = useState(true);
@@ -746,33 +736,7 @@ export default function SelfProfilePage() {
                   </button>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {user.experience && user.experience.length > 0 ? (
-                    user.experience.map((exp) => (
-                      <div
-                        key={exp._id}
-                        className="bg-white/5 border border-white/5 p-4 rounded-2xl"
-                      >
-                        <p className="font-bold text-slate-100">
-                          {exp.role || exp.position}
-                        </p>
-                        <p className="text-xs text-blue-400">
-                          {exp.name || exp.company}
-                        </p>
-                        <p className="text-[11px] text-slate-500 mt-1 uppercase font-bold">
-                          {formatDateRange(exp.startDate, exp.endDate, exp.current)}
-                        </p>
-                        {exp.desc && (
-                          <p className="text-sm text-slate-300 mt-2">{exp.desc}</p>
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-sm text-slate-600 italic">
-                      No experience recorded.
-                    </p>
-                  )}
-                </div>
+                <ExperienceList items={user.experience} />
               )}
             </EditableSection>
 
@@ -917,30 +881,7 @@ export default function SelfProfilePage() {
                   </button>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {user.education && user.education.length > 0 ? (
-                    user.education.map((edu) => (
-                      <div
-                        key={edu._id}
-                        className="bg-white/5 border border-white/5 p-4 rounded-2xl"
-                      >
-                        <p className="font-bold text-slate-100">
-                          {edu.degree || edu.title}
-                        </p>
-                        <p className="text-xs text-blue-400">
-                          {edu.school || edu.name}
-                        </p>
-                        <p className="text-[11px] text-slate-500 mt-1 uppercase font-bold">
-                          {formatDateRange(edu.startDate, edu.endDate, edu.current)}
-                        </p>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-sm text-slate-600 italic">
-                      No education recorded.
-                    </p>
-                  )}
-                </div>
+                <EducationList items={user.education} />
               )}
             </EditableSection>
           </div>

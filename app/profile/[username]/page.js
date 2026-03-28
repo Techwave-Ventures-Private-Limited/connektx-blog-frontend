@@ -11,6 +11,8 @@ import {
 import ProfileBanner from '@/components/profile/ProfileBanner';
 import ProfileIdentityCard from '@/components/profile/ProfileIdentityCard';
 import OnboardingDetailsGrid from '@/components/profile/OnboardingDetailsGrid';
+import ExperienceList from '@/components/profile/ExperienceList';
+import EducationList from '@/components/profile/EducationList';
 
 // 1. DYNAMIC SEO & METADATA
 export async function generateMetadata({ params }) {
@@ -109,16 +111,18 @@ export default async function ProfilePage({ params }) {
 
             {/* EXPERIENCE & EDUCATION GRID */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-               <HistoryList 
-                  title="Experience" 
-                  icon={<Briefcase size={18}/>} 
-                  items={user.experience} 
-               />
-               <HistoryList 
-                  title="Education" 
-                  icon={<GraduationCap size={18}/>} 
-                  items={user.education} 
-               />
+              <section className="space-y-4">
+                <h3 className="text-xs font-black text-slate-500 uppercase tracking-[0.3em] flex items-center gap-2">
+                  <Briefcase size={18} /> Experience
+                </h3>
+                <ExperienceList items={user.experience} />
+              </section>
+              <section className="space-y-4">
+                <h3 className="text-xs font-black text-slate-500 uppercase tracking-[0.3em] flex items-center gap-2">
+                  <GraduationCap size={18} /> Education
+                </h3>
+                <EducationList items={user.education} />
+              </section>
             </div>
 
           </div>
@@ -128,23 +132,4 @@ export default async function ProfilePage({ params }) {
   );
 }
 
-function HistoryList({ title, icon, items }) {
-  return (
-    <div className="space-y-4">
-      <h3 className="text-xs font-black text-slate-500 uppercase tracking-[0.3em] flex items-center gap-2">
-        {icon} {title}
-      </h3>
-      <div className="space-y-4">
-        {items && items.length > 0 ? items.map((item, i) => (
-          <div key={i} className="bg-white/5 border border-white/5 p-4 rounded-2xl">
-            <p className="font-bold text-slate-100">{item.title || item.degree}</p>
-            <p className="text-xs text-blue-400">{item.company || item.school}</p>
-            <p className="text-[10px] text-slate-500 mt-1 uppercase font-bold">{item.duration}</p>
-          </div>
-        )) : (
-          <p className="text-sm text-slate-600 italic">No {title.toLowerCase()} recorded.</p>
-        )}
-      </div>
-    </div>
-  );
-}
+// History lists are shared in components/profile/ExperienceList and EducationList.
