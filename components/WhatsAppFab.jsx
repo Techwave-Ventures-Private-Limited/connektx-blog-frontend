@@ -8,7 +8,7 @@ export default function WhatsAppFab() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
-      <div className="bg-black/80 text-white text-[10px] uppercase tracking-widest px-3 py-2 border border-white/10 rounded-sm backdrop-blur text-right leading-4">
+      <div className="bg-white text-black text-[10px] font-bold uppercase tracking-widest px-3 py-2 border border-white/10 rounded-lg backdrop-blur text-right leading-4">
         <span className="block">Join WhatsApp Group</span>
         <span className="block">For Latest Job Updates</span>
       </div>
