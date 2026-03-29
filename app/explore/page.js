@@ -1,9 +1,10 @@
 "use client";
 import { useState, useEffect, Suspense } from 'react';
 import { userApi } from '@/lib/userApi';
+import { messageApi } from '@/lib/messageApi';
 import { MessageSquare, Download } from 'lucide-react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import AppDownloadDialog from '@/components/AppDownloadDialog';
 import ChatFAB from '@/components/chatFab';
 
@@ -129,6 +130,31 @@ export default function ExplorePage() {
 // 3. UserCard stays exactly as it was
 function UserCard({ user }) {
   const details = user.onboardingDetails || {};
+  const router = useRouter();
+  const [startingChat, setStartingChat] = useState(false);
+
+  const handleStartConversation = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (startingChat) return;
+
+    setStartingChat(true);
+    try {
+      const res = await messageApi.startConversation({ recipientId: user._id });
+      const conversationId = res?.body?._id;
+
+      if (conversationId) {
+        router.push(`/conversations?conversationId=${conversationId}`);
+        return;
+      }
+
+      router.push('/conversations');
+    } catch (error) {
+      console.error("Failed to start conversation:", error);
+    } finally {
+      setStartingChat(false);
+    }
+  };
   
   return (
     <Link href={`/profile/${user.username}`}>
@@ -185,13 +211,11 @@ function UserCard({ user }) {
                </span>
             </div>
             <button 
-              className="flex items-center gap-2 text-[10px] font-bold text-white hover:text-slate-400 transition-colors uppercase tracking-widest"
-              onClick={(e) => {
-                e.preventDefault();
-                // Add message logic here
-              }}
+              className="flex items-center gap-2 text-[10px] font-bold text-white hover:text-slate-400 transition-colors uppercase tracking-widest disabled:opacity-60 disabled:cursor-not-allowed"
+              onClick={handleStartConversation}
+              disabled={startingChat}
             >
-              Message <MessageSquare size={12} />
+              {startingChat ? "Starting..." : "Message"} <MessageSquare size={12} />
             </button>
         </div>
       </div>
