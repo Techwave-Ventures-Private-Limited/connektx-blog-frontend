@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { jobApi } from "@/lib/jobApi";
+import WhatsAppFab from "@/components/WhatsAppFab";
 
 export default function JobDetailPage() {
   const { slug } = useParams();
@@ -181,6 +182,8 @@ export default function JobDetailPage() {
           </div>
         </Section>
       )}
+
+      <WhatsAppFab />
     </div>
   );
 }

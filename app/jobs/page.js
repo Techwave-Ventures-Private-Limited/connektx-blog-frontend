@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { jobApi } from "@/lib/jobApi";
 import { Search } from "lucide-react";
+import WhatsAppFab from "@/components/WhatsAppFab";
 
 export default function JobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -137,6 +138,8 @@ export default function JobsPage() {
           Next
         </button>
       </div>
+
+      <WhatsAppFab />
     </div>
   );
 }
