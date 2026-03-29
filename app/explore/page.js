@@ -101,28 +101,32 @@ function ExploreContent() {
 
       <div className="max-w-6xl mx-auto px-6">
         
-        {/* 1st FIX: REDUCED TOP MARGIN/GAP */}
-        <div className="mb-12 border-b border-white/10 pb-8 w-full text-left">
-          <h1 className="text-3xl font-bold tracking-tight uppercase text-white">
-            Explore
-          </h1>
-          <p className="text-slate-500 text-[10px] mt-2 uppercase tracking-[0.3em]">
-            Connect with the Connektx network.
-          </p>
-        </div>
+        {/* Header + Search Row */}
+        <div className="mb-12 border-b border-white/10 pb-8 w-full flex items-start justify-between gap-6">
+          <div className="text-left">
+            <h1 className="text-3xl font-bold tracking-tight uppercase text-white">
+              Explore
+            </h1>
+            <p className="text-slate-500 text-[10px] mt-2 uppercase tracking-[0.3em]">
+              Connect with the Connektx network.
+            </p>
+          </div>
 
-        <div className="mb-10 flex items-center gap-4">
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search users (min 4 characters)"
-            className="w-full bg-black border border-white/10 px-4 py-3 text-xs uppercase tracking-widest outline-none focus:border-white/30"
-          />
-          {searching && (
-            <span className="text-[10px] uppercase tracking-widest text-slate-500">
-              Searching...
-            </span>
-          )}
+          <div className="flex items-center gap-3">
+            <div className="transition-all duration-200 w-36 sm:w-64 focus-within:w-72 md:focus-within:w-80">
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search users (min 4 characters)"
+                className="w-full bg-black border border-white/10 px-4 py-3 text-xs uppercase tracking-widest outline-none focus:border-white/30"
+              />
+            </div>
+            {searching && (
+              <span className="text-[10px] uppercase tracking-widest text-slate-500">
+                Searching...
+              </span>
+            )}
+          </div>
         </div>
 
         {/* 3-COLUMN GRID */}
@@ -204,10 +208,8 @@ function UserCard({ user }) {
     }
   };
   
-  const profileSlug = user.username || user._id;
-
   return (
-    <Link href={`/profile/${profileSlug}`}>
+    <Link href={`/profile/${user.username}`}>
       <div className="bg-black border border-white/10 p-6 hover:border-white/30 transition-all duration-300 flex flex-col h-full rounded-sm">
         
         {/* HEADER: IMAGE & IDENTITY */}
