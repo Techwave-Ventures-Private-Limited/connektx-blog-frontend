@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { jobApi } from "@/lib/jobApi";
 import { Search } from "lucide-react";
+import AppHeader from "@/components/appheader/AppHeader";
 import WhatsAppFab from "@/components/WhatsAppFab";
 
 export default function JobsPage() {
@@ -43,13 +44,7 @@ export default function JobsPage() {
   return (
     <div className="min-h-screen bg-black text-white px-4 md:px-8 py-10 max-w-6xl mx-auto">
 
-      {/* Header */}
-      <div className="mb-10">
-        <h1 className="text-2xl font-bold uppercase tracking-tight">Explore Jobs</h1>
-        <p className="text-xs text-slate-500 uppercase tracking-widest mt-2">
-          Discover opportunities from founders & companies
-        </p>
-      </div>
+      <AppHeader description="Discover opportunities from founders & companies" />
 
       {/* Filters */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">

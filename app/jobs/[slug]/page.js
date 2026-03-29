@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { jobApi } from "@/lib/jobApi";
 import WhatsAppFab from "@/components/WhatsAppFab";
+import AppHeader from "@/components/appheader/AppHeader";
 
 export default function JobDetailPage() {
   const { slug } = useParams();
@@ -54,6 +55,7 @@ export default function JobDetailPage() {
 
   return (
     <div className="min-h-screen bg-black text-white px-4 md:px-8 py-10 max-w-5xl mx-auto">
+      <AppHeader description="Job details and application info" />
 
       {/* HEADER */}
       <div className="border-b border-white/10 pb-6 mb-8">
