@@ -37,7 +37,7 @@ export default function ExploreUserCard({ user }) {
       <div className="bg-black border border-white/10 p-6 hover:border-white/30 transition-all duration-300 flex flex-col h-full rounded-sm">
         <div className="flex items-center gap-4 mb-6">
           <img
-            src={user.profileImage || "/default-avatar.png"}
+            src={user.profileImage || "/images/default-avatar.png"}
             className="w-14 h-14 rounded-sm object-cover border border-white/5"
             alt={user.name}
           />

@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
       title: `${user.name} (@${username}) | Connektx`,
       description: user.headline || user.bio || `Connect with ${user.name} on Connektx.`,
       openGraph: {
-        images: [user.profileImage || '/default-avatar.png'],
+        images: [user.profileImage || '/images/default-avatar.png'],
       },
     };
   } catch (e) {

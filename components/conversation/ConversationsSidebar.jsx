@@ -103,7 +103,7 @@ export default function ConversationsSidebar({
                     }`}
                   >
                     <img
-                      src={user?.profileImage || "/default-avatar.png"}
+                      src={user?.profileImage || "/images/default-avatar.png"}
                       className="w-10 h-10 rounded-sm object-cover"
                       alt={user?.name}
                     />

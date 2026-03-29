@@ -16,7 +16,7 @@ export default function ProfileIdentityCard({
     >
       <div className="relative inline-block mb-6">
         <img
-          src={user.profileImage || "/default-avatar.png"}
+          src={user.profileImage || "/images/default-avatar.png"}
           className="w-32 h-32 lg:w-40 lg:h-40 rounded-[2rem] object-cover border-4 border-[#07090e] shadow-xl"
           alt={user.name}
         />
