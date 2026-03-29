@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import AppDownloadDialog from "@/components/AppDownloadDialog";
 import ChatFAB from "@/components/chatFab";
 import AppHeader from "@/components/appheader/AppHeader";
+import ExploreSearchBar from "@/components/explore/ExploreSearchBar";
 import ExploreUserGrid from "@/components/explore/ExploreUserGrid";
 import ExplorePagination from "@/components/explore/ExplorePagination";
 
@@ -100,25 +101,12 @@ function ExploreContent() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6">
-        <AppHeader
-          description="Connect with the Connektx network."
-          rightSlot={
-            <div className="flex items-center gap-3">
-              <div className="transition-all duration-200 w-36 sm:w-64 focus-within:w-72 md:focus-within:w-80">
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search users (min 4 characters)"
-                  className="w-full bg-black border border-white/10 px-4 py-3 text-xs uppercase tracking-widest outline-none focus:border-white/30"
-                />
-              </div>
-              {searching && (
-                <span className="text-[10px] uppercase tracking-widest text-slate-500">
-                  Searching...
-                </span>
-              )}
-            </div>
-          }
+        <AppHeader description="Connect with the Connektx network." />
+
+        <ExploreSearchBar
+          query={query}
+          setQuery={setQuery}
+          searching={searching}
         />
 
         <ExploreUserGrid
