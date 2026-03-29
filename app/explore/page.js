@@ -2,6 +2,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { userApi } from '@/lib/userApi';
 import { messageApi } from '@/lib/messageApi';
+import { searchApi } from '@/lib/searchApi';
 import { MessageSquare, Download } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -16,6 +17,10 @@ function ExploreContent() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
+  const [query, setQuery] = useState("");
+  const [searching, setSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const isSearchActive = query.trim().length >= 4;
 
   useEffect(() => {
     // Check if we just came from onboarding
@@ -26,6 +31,28 @@ function ExploreContent() {
     }
     fetchUsers(1, true);
   }, [searchParams]);
+
+  useEffect(() => {
+    if (!isSearchActive) {
+      setSearchResults([]);
+      setSearching(false);
+      return;
+    }
+
+    const handle = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const data = await searchApi.searchUsers(query.trim(), { limit: 20 });
+        setSearchResults(data.users || []);
+      } catch (error) {
+        console.error("Failed to search users:", error);
+      } finally {
+        setSearching(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(handle);
+  }, [query, isSearchActive]);
 
   const fetchUsers = async (pageNum, isInitial = false) => {
     setLoading(true);
@@ -45,6 +72,7 @@ function ExploreContent() {
   };
 
   const loadMore = () => {
+    if (isSearchActive) return;
     const nextPage = page + 1;
     setPage(nextPage);
     fetchUsers(nextPage);
@@ -83,18 +111,38 @@ function ExploreContent() {
           </p>
         </div>
 
+        <div className="mb-10 flex items-center gap-4">
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search users (min 4 characters)"
+            className="w-full bg-black border border-white/10 px-4 py-3 text-xs uppercase tracking-widest outline-none focus:border-white/30"
+          />
+          {searching && (
+            <span className="text-[10px] uppercase tracking-widest text-slate-500">
+              Searching...
+            </span>
+          )}
+        </div>
+
         {/* 3-COLUMN GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {users.map((user) => (
+          {(isSearchActive ? searchResults : users).map((user) => (
             <UserCard key={user._id} user={user} />
           ))}
         </div>
+
+        {isSearchActive && !searching && searchResults.length === 0 && (
+          <p className="mt-10 text-center text-xs uppercase tracking-widest text-slate-500">
+            No users found
+          </p>
+        )}
 
         {/* PAGINATION */}
         <div className="mt-16 flex justify-center">
           {loading ? (
              <p className="text-slate-500 text-xs uppercase tracking-widest">Loading...</p>
-          ) : hasMore && (
+          ) : !isSearchActive && hasMore && (
             <button 
               onClick={loadMore}
               className="px-8 py-3 border border-white/20 text-white text-xs font-bold hover:bg-white hover:text-black transition-all uppercase tracking-widest"
@@ -156,8 +204,10 @@ function UserCard({ user }) {
     }
   };
   
+  const profileSlug = user.username || user._id;
+
   return (
-    <Link href={`/profile/${user.username}`}>
+    <Link href={`/profile/${profileSlug}`}>
       <div className="bg-black border border-white/10 p-6 hover:border-white/30 transition-all duration-300 flex flex-col h-full rounded-sm">
         
         {/* HEADER: IMAGE & IDENTITY */}
