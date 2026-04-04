@@ -84,9 +84,12 @@ export default function JobDetailPage() {
             Apply Now
           </a>
         ) : (
-          <button className="bg-white text-black px-6 py-3 text-sm font-bold">
+          <a
+            href={`/jobs/${job.slug}/apply`}
+            className="bg-white text-black px-6 py-3 text-sm font-bold"
+          >
             Easy Apply
-          </button>
+          </a>
         )}
       </div>
 
