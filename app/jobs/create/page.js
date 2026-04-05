@@ -1,9 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AppHeader from "@/components/appheader/AppHeader";
 import WhatsAppFab from "@/components/WhatsAppFab";
 import { jobApi } from "@/lib/jobApi";
+import { userApi } from "@/lib/userApi";
+import { experienceApi } from "@/lib/experienceApi";
 
 export default function CreateJobPage() {
   const router = useRouter();
@@ -29,6 +31,12 @@ export default function CreateJobPage() {
     { name: "", description: "" },
   ]);
   const [submitting, setSubmitting] = useState(false);
+  const [userLoading, setUserLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [verifying, setVerifying] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [workEmail, setWorkEmail] = useState("");
+  const [workOtp, setWorkOtp] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -54,6 +62,83 @@ export default function CreateJobPage() {
 
   const removeStage = (index) =>
     setCustomStages((prev) => prev.filter((_, i) => i !== index));
+
+  const fetchSelf = async () => {
+    try {
+      setUserLoading(true);
+      const selfData = await userApi.getSelf();
+      const fetchedUser = selfData?.body || selfData?.user || selfData || null;
+      setUser(fetchedUser);
+
+      const verifiedExperience = Array.isArray(fetchedUser?.experience)
+        ? fetchedUser.experience.find((exp) => exp?.isVerified)
+        : null;
+      if (verifiedExperience?._id) {
+        setExperienceId(verifiedExperience._id);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setUserLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSelf();
+  }, []);
+
+  const hasVerifiedExperience = Array.isArray(user?.experience)
+    ? user.experience.some((exp) => exp?.isVerified)
+    : false;
+  const canPostJob = user?.type === "Company" || hasVerifiedExperience;
+
+  const handleSendOtp = async () => {
+    setError("");
+    setSuccess("");
+    if (!experienceId || !workEmail) {
+      setError("Experience ID and work email are required.");
+      return;
+    }
+    setVerifying(true);
+    try {
+      await experienceApi.sendWorkOtp({ email: workEmail, experienceId });
+      setOtpSent(true);
+      setSuccess("OTP sent to your work email.");
+    } catch (err) {
+      const message =
+        err?.response?.data?.message || "Failed to send OTP.";
+      setError(message);
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    setError("");
+    setSuccess("");
+    if (!experienceId || !workEmail || !workOtp) {
+      setError("Experience ID, work email, and OTP are required.");
+      return;
+    }
+    setVerifying(true);
+    try {
+      await experienceApi.verifyWorkOtp({
+        email: workEmail,
+        otp: workOtp,
+        experienceId,
+      });
+      setSuccess("Experience verified successfully.");
+      setOtpSent(false);
+      setWorkOtp("");
+      await fetchSelf();
+    } catch (err) {
+      const message =
+        err?.response?.data?.message || "Failed to verify OTP.";
+      setError(message);
+    } finally {
+      setVerifying(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -127,6 +212,113 @@ export default function CreateJobPage() {
   return (
     <div className="min-h-screen bg-black text-white px-4 md:px-8 py-10 max-w-5xl mx-auto">
       <AppHeader description="Post a job for builders and explorers" />
+
+      <div className="border border-white/10 p-4 mb-8">
+        <h2 className="text-xs uppercase tracking-widest text-slate-500 mb-3">
+          Posting As
+        </h2>
+        {userLoading ? (
+          <p className="text-sm text-slate-400">Loading recruiter info...</p>
+        ) : user ? (
+          <div className="space-y-1 text-sm text-slate-300">
+            <p>
+              <span className="text-slate-500">Name:</span> {user.name || "---"}
+            </p>
+            <p>
+              <span className="text-slate-500">Email:</span>{" "}
+              {user.email || "---"}
+            </p>
+            <p>
+              <span className="text-slate-500">Account Type:</span>{" "}
+              {user.type || "User"}
+            </p>
+            {user.headline && (
+              <p>
+                <span className="text-slate-500">Headline:</span>{" "}
+                {user.headline}
+              </p>
+            )}
+          </div>
+        ) : (
+          <p className="text-sm text-slate-400">
+            Unable to load recruiter info.
+          </p>
+        )}
+      </div>
+
+      {!canPostJob && (
+        <div className="border border-white/10 p-4 mb-8">
+          <h3 className="text-sm uppercase tracking-widest text-slate-500 mb-2">
+            Verify Experience to Post
+          </h3>
+          <p className="text-xs text-slate-500 mb-4">
+            Only verified work experience can post jobs. Complete verification
+            below to continue.
+          </p>
+
+          {Array.isArray(user?.experience) && user.experience.length > 0 ? (
+            <select
+              className={inputClass}
+              value={experienceId}
+              onChange={(e) => setExperienceId(e.target.value)}
+            >
+              <option value="">Select experience</option>
+              {user.experience.map((exp) => (
+                <option key={exp?._id} value={exp?._id}>
+                  {exp?.role || "Role"} @ {exp?.name || "Company"}
+                  {exp?.isVerified ? " (Verified)" : ""}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              className={inputClass}
+              placeholder="experienceId"
+              value={experienceId}
+              onChange={(e) => setExperienceId(e.target.value)}
+            />
+          )}
+
+          <div className="mt-3 space-y-3">
+            <input
+              type="email"
+              className={inputClass}
+              placeholder="Work email (official)"
+              value={workEmail}
+              onChange={(e) => setWorkEmail(e.target.value)}
+            />
+            {otpSent && (
+              <input
+                type="text"
+                className={inputClass}
+                placeholder="Enter OTP"
+                value={workOtp}
+                onChange={(e) => setWorkOtp(e.target.value)}
+              />
+            )}
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={handleSendOtp}
+                disabled={verifying}
+                className="px-4 py-2 border border-white/10 text-xs uppercase tracking-widest"
+              >
+                {verifying ? "Sending..." : "Send OTP"}
+              </button>
+              {otpSent && (
+                <button
+                  type="button"
+                  onClick={handleVerifyOtp}
+                  disabled={verifying}
+                  className="px-4 py-2 bg-white text-black text-xs uppercase tracking-widest"
+                >
+                  {verifying ? "Verifying..." : "Verify OTP"}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -394,6 +586,7 @@ export default function CreateJobPage() {
             placeholder="experienceId"
             value={experienceId}
             onChange={(e) => setExperienceId(e.target.value)}
+            disabled={canPostJob && user?.type === "Company"}
           />
           <p className="text-xs text-slate-500 mt-2">
             Required only if you are posting from a personal account.
@@ -414,7 +607,7 @@ export default function CreateJobPage() {
         <div className="flex items-center gap-3">
           <button
             type="submit"
-            disabled={submitting}
+            disabled={submitting || !canPostJob}
             className="bg-white text-black px-6 py-3 text-sm font-bold disabled:opacity-40"
           >
             {submitting ? "Posting..." : "Post Job"}
