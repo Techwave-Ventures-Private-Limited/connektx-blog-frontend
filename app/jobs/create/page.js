@@ -5,7 +5,6 @@ import AppHeader from "@/components/appheader/AppHeader";
 import WhatsAppFab from "@/components/WhatsAppFab";
 import { jobApi } from "@/lib/jobApi";
 import { userApi } from "@/lib/userApi";
-import { experienceApi } from "@/lib/experienceApi";
 import ExperienceVerifyDialog from "@/components/experience/ExperienceVerifyDialog";
 
 export default function CreateJobPage() {
@@ -34,10 +33,6 @@ export default function CreateJobPage() {
   const [submitting, setSubmitting] = useState(false);
   const [userLoading, setUserLoading] = useState(true);
   const [user, setUser] = useState(null);
-  const [verifying, setVerifying] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
-  const [workEmail, setWorkEmail] = useState("");
-  const [workOtp, setWorkOtp] = useState("");
   const [showVerifyDialog, setShowVerifyDialog] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -94,52 +89,8 @@ export default function CreateJobPage() {
     : false;
   const canPostJob = user?.type === "Company" || hasVerifiedExperience;
 
-  const handleSendOtp = async () => {
-    setError("");
-    setSuccess("");
-    if (!experienceId || !workEmail) {
-      setError("Experience ID and work email are required.");
-      return;
-    }
-    setVerifying(true);
-    try {
-      await experienceApi.sendWorkOtp({ email: workEmail, experienceId });
-      setOtpSent(true);
-      setSuccess("OTP sent to your work email.");
-    } catch (err) {
-      const message =
-        err?.response?.data?.message || "Failed to send OTP.";
-      setError(message);
-    } finally {
-      setVerifying(false);
-    }
-  };
-
-  const handleVerifyOtp = async () => {
-    setError("");
-    setSuccess("");
-    if (!experienceId || !workEmail || !workOtp) {
-      setError("Experience ID, work email, and OTP are required.");
-      return;
-    }
-    setVerifying(true);
-    try {
-      await experienceApi.verifyWorkOtp({
-        email: workEmail,
-        otp: workOtp,
-        experienceId,
-      });
-      setSuccess("Experience verified successfully.");
-      setOtpSent(false);
-      setWorkOtp("");
-      await fetchSelf();
-    } catch (err) {
-      const message =
-        err?.response?.data?.message || "Failed to verify OTP.";
-      setError(message);
-    } finally {
-      setVerifying(false);
-    }
+  const handleVerified = async () => {
+    await fetchSelf();
   };
 
   const handleSubmit = async (e) => {
@@ -560,14 +511,7 @@ export default function CreateJobPage() {
         user={user}
         experienceId={experienceId}
         setExperienceId={setExperienceId}
-        workEmail={workEmail}
-        setWorkEmail={setWorkEmail}
-        workOtp={workOtp}
-        setWorkOtp={setWorkOtp}
-        otpSent={otpSent}
-        onSendOtp={handleSendOtp}
-        onVerifyOtp={handleVerifyOtp}
-        verifying={verifying}
+        onVerified={handleVerified}
       />
 
       <WhatsAppFab />

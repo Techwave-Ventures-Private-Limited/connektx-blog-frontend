@@ -1,4 +1,6 @@
 "use client";
+import { useEffect, useState } from "react";
+import { experienceApi } from "@/lib/experienceApi";
 
 export default function ExperienceVerifyDialog({
   open,
@@ -6,19 +8,77 @@ export default function ExperienceVerifyDialog({
   user,
   experienceId,
   setExperienceId,
-  workEmail,
-  setWorkEmail,
-  workOtp,
-  setWorkOtp,
-  otpSent,
-  onSendOtp,
-  onVerifyOtp,
-  verifying,
+  onVerified,
 }) {
   if (!open) return null;
 
   const inputClass =
     "w-full bg-black border border-white/10 p-3 rounded-sm outline-none focus:border-white/30 text-white text-sm";
+
+  const [workEmail, setWorkEmail] = useState("");
+  const [workOtp, setWorkOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [localError, setLocalError] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    setWorkEmail("");
+    setWorkOtp("");
+    setOtpSent(false);
+    setVerifying(false);
+    setLocalError("");
+    setShowSuccess(false);
+  }, [open]);
+
+  const handleSendOtp = async () => {
+    setLocalError("");
+    if (!experienceId || !workEmail) {
+      setLocalError("Experience and work email are required.");
+      return;
+    }
+    setVerifying(true);
+    try {
+      await experienceApi.sendWorkOtp({ email: workEmail, experienceId });
+      setOtpSent(true);
+    } catch (err) {
+      const message =
+        err?.response?.data?.message || "Failed to send OTP.";
+      setLocalError(message);
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    setLocalError("");
+    if (!experienceId || !workEmail || !workOtp) {
+      setLocalError("Experience, work email, and OTP are required.");
+      return;
+    }
+    setVerifying(true);
+    try {
+      await experienceApi.verifyWorkOtp({
+        email: workEmail,
+        otp: workOtp,
+        experienceId,
+      });
+      setShowSuccess(true);
+      if (onVerified) {
+        await onVerified();
+      }
+      setTimeout(() => {
+        onClose();
+      }, 1200);
+    } catch (err) {
+      const message =
+        err?.response?.data?.message || "Failed to verify OTP.";
+      setLocalError(message);
+    } finally {
+      setVerifying(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
@@ -42,6 +102,12 @@ export default function ExperienceVerifyDialog({
         </div>
 
         <div className="space-y-4">
+          {showSuccess && (
+            <div className="border border-green-400/30 text-green-400 text-sm px-4 py-3">
+              Experience verified successfully.
+            </div>
+          )}
+
           {Array.isArray(user?.experience) && user.experience.length > 0 ? (
             <select
               className={inputClass}
@@ -80,10 +146,16 @@ export default function ExperienceVerifyDialog({
             />
           )}
 
+          {localError && (
+            <div className="text-sm text-red-400 border border-red-400/30 p-3">
+              {localError}
+            </div>
+          )}
+
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={onSendOtp}
+              onClick={handleSendOtp}
               disabled={verifying || !experienceId}
               className="px-4 py-2 border border-white/10 text-xs uppercase tracking-widest"
             >
@@ -92,7 +164,7 @@ export default function ExperienceVerifyDialog({
             {otpSent && (
               <button
                 type="button"
-                onClick={onVerifyOtp}
+                onClick={handleVerifyOtp}
                 disabled={verifying}
                 className="px-4 py-2 bg-white text-black text-xs uppercase tracking-widest"
               >
