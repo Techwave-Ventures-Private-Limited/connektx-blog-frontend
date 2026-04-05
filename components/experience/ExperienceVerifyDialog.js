@@ -20,7 +20,8 @@ export default function ExperienceVerifyDialog({
   const [otpSent, setOtpSent] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [localError, setLocalError] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [result, setResult] = useState(null);
+  const [step, setStep] = useState(1);
 
   useEffect(() => {
     if (!open) return;
@@ -29,8 +30,21 @@ export default function ExperienceVerifyDialog({
     setOtpSent(false);
     setVerifying(false);
     setLocalError("");
-    setShowSuccess(false);
+    setResult(null);
+    setStep(1);
   }, [open]);
+
+  useEffect(() => {
+    if (!experienceId) {
+      setStep(1);
+      return;
+    }
+    if (!otpSent) {
+      setStep(1);
+    } else {
+      setStep(2);
+    }
+  }, [experienceId, otpSent]);
 
   const handleSendOtp = async () => {
     setLocalError("");
@@ -64,17 +78,14 @@ export default function ExperienceVerifyDialog({
         otp: workOtp,
         experienceId,
       });
-      setShowSuccess(true);
+      setResult({ status: "success", message: "Experience verified successfully." });
       if (onVerified) {
         await onVerified();
       }
-      setTimeout(() => {
-        onClose();
-      }, 1200);
     } catch (err) {
       const message =
         err?.response?.data?.message || "Failed to verify OTP.";
-      setLocalError(message);
+      setResult({ status: "error", message });
     } finally {
       setVerifying(false);
     }
@@ -102,76 +113,125 @@ export default function ExperienceVerifyDialog({
         </div>
 
         <div className="space-y-4">
-          {showSuccess && (
-            <div className="border border-green-400/30 text-green-400 text-sm px-4 py-3">
-              Experience verified successfully.
+          {result && (
+            <div
+              className={`text-sm px-4 py-3 border ${
+                result.status === "success"
+                  ? "border-green-400/30 text-green-400"
+                  : "border-red-400/30 text-red-400"
+              }`}
+            >
+              {result.message}
             </div>
           )}
 
-          {Array.isArray(user?.experience) && user.experience.length > 0 ? (
-            <select
-              className={inputClass}
-              value={experienceId}
-              onChange={(e) => setExperienceId(e.target.value)}
-            >
-              <option value="">Select experience</option>
-              {user.experience.map((exp) => (
-                <option key={exp?._id} value={exp?._id}>
-                  {exp?.role || "Role"} @ {exp?.name || "Company"}
-                  {exp?.isVerified ? " (Verified)" : ""}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <p className="text-xs text-slate-500">
-              No experience found. Please add experience in your profile first.
-            </p>
+          {!result && (
+            <>
+              {step === 1 && (
+                <div className="space-y-4">
+                  {Array.isArray(user?.experience) &&
+                  user.experience.length > 0 ? (
+                    <select
+                      className={inputClass}
+                      value={experienceId}
+                      onChange={(e) => setExperienceId(e.target.value)}
+                    >
+                      <option value="">Select experience</option>
+                      {user.experience.map((exp) => (
+                        <option key={exp?._id} value={exp?._id}>
+                          {exp?.role || "Role"} @ {exp?.name || "Company"}
+                          {exp?.isVerified ? " (Verified)" : ""}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <p className="text-xs text-slate-500">
+                      No experience found. Please add experience in your profile
+                      first.
+                    </p>
+                  )}
+
+                  <input
+                    type="email"
+                    className={inputClass}
+                    placeholder="Work email (official)"
+                    value={workEmail}
+                    onChange={(e) => setWorkEmail(e.target.value)}
+                    disabled={!experienceId}
+                  />
+
+                  {localError && (
+                    <div className="text-sm text-red-400 border border-red-400/30 p-3">
+                      {localError}
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={handleSendOtp}
+                      disabled={verifying || !experienceId}
+                      className="px-4 py-2 border border-white/10 text-xs uppercase tracking-widest"
+                    >
+                      {verifying ? "Sending..." : "Send OTP"}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {step === 2 && (
+                <div className="space-y-4">
+                  <input
+                    type="text"
+                    className={inputClass}
+                    placeholder="Enter OTP"
+                    value={workOtp}
+                    onChange={(e) => setWorkOtp(e.target.value)}
+                  />
+
+                  {localError && (
+                    <div className="text-sm text-red-400 border border-red-400/30 p-3">
+                      {localError}
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={handleVerifyOtp}
+                      disabled={verifying}
+                      className="px-4 py-2 bg-white text-black text-xs uppercase tracking-widest"
+                    >
+                      {verifying ? "Verifying..." : "Verify OTP"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOtpSent(false);
+                        setWorkOtp("");
+                        setStep(1);
+                      }}
+                      className="px-4 py-2 border border-white/10 text-xs uppercase tracking-widest"
+                    >
+                      Change Email
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
-          <input
-            type="email"
-            className={inputClass}
-            placeholder="Work email (official)"
-            value={workEmail}
-            onChange={(e) => setWorkEmail(e.target.value)}
-            disabled={!experienceId}
-          />
-          {otpSent && (
-            <input
-              type="text"
-              className={inputClass}
-              placeholder="Enter OTP"
-              value={workOtp}
-              onChange={(e) => setWorkOtp(e.target.value)}
-            />
-          )}
-
-          {localError && (
-            <div className="text-sm text-red-400 border border-red-400/30 p-3">
-              {localError}
-            </div>
-          )}
-
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={handleSendOtp}
-              disabled={verifying || !experienceId}
-              className="px-4 py-2 border border-white/10 text-xs uppercase tracking-widest"
-            >
-              {verifying ? "Sending..." : "Send OTP"}
-            </button>
-            {otpSent && (
+          {result && (
+            <div className="flex items-center gap-3">
               <button
                 type="button"
-                onClick={handleVerifyOtp}
-                disabled={verifying}
+                onClick={onClose}
                 className="px-4 py-2 bg-white text-black text-xs uppercase tracking-widest"
               >
-                {verifying ? "Verifying..." : "Verify OTP"}
+                {result.status === "success" ? "Continue" : "Close"}
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
