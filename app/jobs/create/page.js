@@ -37,6 +37,7 @@ export default function CreateJobPage() {
   const [otpSent, setOtpSent] = useState(false);
   const [workEmail, setWorkEmail] = useState("");
   const [workOtp, setWorkOtp] = useState("");
+  const [showVerifyDialog, setShowVerifyDialog] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -247,76 +248,22 @@ export default function CreateJobPage() {
       </div>
 
       {!canPostJob && (
-        <div className="border border-white/10 p-4 mb-8">
-          <h3 className="text-sm uppercase tracking-widest text-slate-500 mb-2">
-            Verify Experience to Post
-          </h3>
-          <p className="text-xs text-slate-500 mb-4">
-            Only verified work experience can post jobs. Complete verification
-            below to continue.
-          </p>
-
-          {Array.isArray(user?.experience) && user.experience.length > 0 ? (
-            <select
-              className={inputClass}
-              value={experienceId}
-              onChange={(e) => setExperienceId(e.target.value)}
-            >
-              <option value="">Select experience</option>
-              {user.experience.map((exp) => (
-                <option key={exp?._id} value={exp?._id}>
-                  {exp?.role || "Role"} @ {exp?.name || "Company"}
-                  {exp?.isVerified ? " (Verified)" : ""}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <input
-              className={inputClass}
-              placeholder="experienceId"
-              value={experienceId}
-              onChange={(e) => setExperienceId(e.target.value)}
-            />
-          )}
-
-          <div className="mt-3 space-y-3">
-            <input
-              type="email"
-              className={inputClass}
-              placeholder="Work email (official)"
-              value={workEmail}
-              onChange={(e) => setWorkEmail(e.target.value)}
-            />
-            {otpSent && (
-              <input
-                type="text"
-                className={inputClass}
-                placeholder="Enter OTP"
-                value={workOtp}
-                onChange={(e) => setWorkOtp(e.target.value)}
-              />
-            )}
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={handleSendOtp}
-                disabled={verifying}
-                className="px-4 py-2 border border-white/10 text-xs uppercase tracking-widest"
-              >
-                {verifying ? "Sending..." : "Send OTP"}
-              </button>
-              {otpSent && (
-                <button
-                  type="button"
-                  onClick={handleVerifyOtp}
-                  disabled={verifying}
-                  className="px-4 py-2 bg-white text-black text-xs uppercase tracking-widest"
-                >
-                  {verifying ? "Verifying..." : "Verify OTP"}
-                </button>
-              )}
-            </div>
+        <div className="border border-white/10 p-4 mb-8 flex items-center justify-between gap-4">
+          <div>
+            <h3 className="text-sm uppercase tracking-widest text-slate-500 mb-1">
+              Verify Experience to Post
+            </h3>
+            <p className="text-xs text-slate-500">
+              Only verified work experience can post jobs.
+            </p>
           </div>
+          <button
+            type="button"
+            onClick={() => setShowVerifyDialog(true)}
+            className="px-4 py-2 bg-white text-black text-xs uppercase tracking-widest"
+          >
+            Verify Now
+          </button>
         </div>
       )}
 
@@ -577,22 +524,6 @@ export default function CreateJobPage() {
           </button>
         </div>
 
-        <div className="border border-white/10 p-4">
-          <h3 className="text-sm uppercase tracking-widest text-slate-500 mb-2">
-            Verified Experience (for personal accounts)
-          </h3>
-          <input
-            className={inputClass}
-            placeholder="experienceId"
-            value={experienceId}
-            onChange={(e) => setExperienceId(e.target.value)}
-            disabled={canPostJob && user?.type === "Company"}
-          />
-          <p className="text-xs text-slate-500 mt-2">
-            Required only if you are posting from a personal account.
-          </p>
-        </div>
-
         {error && (
           <div className="text-sm text-red-400 border border-red-400/30 p-3">
             {error}
@@ -621,6 +552,95 @@ export default function CreateJobPage() {
           </button>
         </div>
       </form>
+
+      {showVerifyDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+          <div className="w-full max-w-lg bg-black border border-white/10 p-6">
+            <div className="flex items-start justify-between gap-4 mb-4">
+              <div>
+                <h3 className="text-sm uppercase tracking-widest text-slate-500">
+                  Verify Experience
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  Use your official work email to verify your experience.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowVerifyDialog(false)}
+                className="text-xs text-slate-400 hover:text-white"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {Array.isArray(user?.experience) && user.experience.length > 0 ? (
+                <select
+                  className={inputClass}
+                  value={experienceId}
+                  onChange={(e) => setExperienceId(e.target.value)}
+                  disabled={hasVerifiedExperience}
+                >
+                  <option value="">Select experience</option>
+                  {user.experience.map((exp) => (
+                    <option key={exp?._id} value={exp?._id}>
+                      {exp?.role || "Role"} @ {exp?.name || "Company"}
+                      {exp?.isVerified ? " (Verified)" : ""}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  className={inputClass}
+                  placeholder="experienceId"
+                  value={experienceId}
+                  onChange={(e) => setExperienceId(e.target.value)}
+                  disabled={hasVerifiedExperience}
+                />
+              )}
+
+              <input
+                type="email"
+                className={inputClass}
+                placeholder="Work email (official)"
+                value={workEmail}
+                onChange={(e) => setWorkEmail(e.target.value)}
+              />
+              {otpSent && (
+                <input
+                  type="text"
+                  className={inputClass}
+                  placeholder="Enter OTP"
+                  value={workOtp}
+                  onChange={(e) => setWorkOtp(e.target.value)}
+                />
+              )}
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleSendOtp}
+                  disabled={verifying}
+                  className="px-4 py-2 border border-white/10 text-xs uppercase tracking-widest"
+                >
+                  {verifying ? "Sending..." : "Send OTP"}
+                </button>
+                {otpSent && (
+                  <button
+                    type="button"
+                    onClick={handleVerifyOtp}
+                    disabled={verifying}
+                    className="px-4 py-2 bg-white text-black text-xs uppercase tracking-widest"
+                  >
+                    {verifying ? "Verifying..." : "Verify OTP"}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <WhatsAppFab />
     </div>
