@@ -38,7 +38,6 @@ export default function CreateJobPage() {
   const [workEmail, setWorkEmail] = useState("");
   const [workOtp, setWorkOtp] = useState("");
   const [showVerifyDialog, setShowVerifyDialog] = useState(false);
-  const [selectedExperienceLabel, setSelectedExperienceLabel] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -576,59 +575,25 @@ export default function CreateJobPage() {
             </div>
 
             <div className="space-y-4">
-              <div className="space-y-2">
-                {Array.isArray(user?.experience) && user.experience.length > 0 ? (
-                  user.experience.map((exp) => (
-                    <div
-                      key={exp?._id}
-                      className="flex items-center justify-between border border-white/10 p-3"
-                    >
-                      <div className="text-sm">
-                        <p className="text-slate-200">
-                          {exp?.role || "Role"} @ {exp?.name || "Company"}
-                        </p>
-                        {exp?.isVerified && (
-                          <p className="text-xs text-green-400">Verified</p>
-                        )}
-                      </div>
-                      {exp?.isVerified ? (
-                        <button
-                          type="button"
-                          className="px-3 py-1 text-xs border border-white/10 text-slate-400"
-                          disabled
-                        >
-                          Verified
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setExperienceId(exp?._id || "");
-                            setSelectedExperienceLabel(
-                              `${exp?.role || "Role"} @ ${
-                                exp?.name || "Company"
-                              }`
-                            );
-                          }}
-                          className="px-3 py-1 text-xs bg-white text-black"
-                        >
-                          Select
-                        </button>
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-xs text-slate-500">
-                    No experience found. Please add experience in your profile
-                    first.
-                  </p>
-                )}
-              </div>
-
-              {experienceId && (
-                <div className="text-xs text-slate-400">
-                  Selected: {selectedExperienceLabel}
-                </div>
+              {Array.isArray(user?.experience) && user.experience.length > 0 ? (
+                <select
+                  className={inputClass}
+                  value={experienceId}
+                  onChange={(e) => setExperienceId(e.target.value)}
+                >
+                  <option value="">Select experience</option>
+                  {user.experience.map((exp) => (
+                    <option key={exp?._id} value={exp?._id}>
+                      {exp?.role || "Role"} @ {exp?.name || "Company"}
+                      {exp?.isVerified ? " (Verified)" : ""}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <p className="text-xs text-slate-500">
+                  No experience found. Please add experience in your profile
+                  first.
+                </p>
               )}
 
               <input
