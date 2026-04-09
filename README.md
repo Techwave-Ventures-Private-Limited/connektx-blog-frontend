@@ -209,12 +209,29 @@ docker build \
 docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/connektx-web:latest
 ```
 
-#### 4. Configure GitHub Auto-Deploy
+#### 4. Create Deployment IAM User (Recommended)
+
+For security, create a separate IAM user with minimal permissions:
+
+```bash
+# Creates IAM user with only deployment permissions
+chmod +x scripts/create-deployment-user.sh
+./scripts/create-deployment-user.sh
+```
+
+This creates user `github-deploy-connektx` with ONLY:
+- ECR: Push Docker images
+- ECS: Update service & task definitions
+- IAM: Pass role to ECS tasks
+
+**Copy the access keys shown!** You'll need them for GitHub.
+
+#### 5. Configure GitHub Auto-Deploy
 
 **Add GitHub Secrets** (Settings → Secrets → Actions):
 ```
-AWS_ACCESS_KEY_ID=<your-key>
-AWS_SECRET_ACCESS_KEY=<your-secret>
+AWS_ACCESS_KEY_ID=<from-step-4>
+AWS_SECRET_ACCESS_KEY=<from-step-4>
 NEXT_PUBLIC_SITE_URL=https://connektx.com
 NEXT_PUBLIC_BACKEND_URL=https://connektx-blogs-backend.onrender.com/api
 NEXT_PUBLIC_APP_BACKEND_URL=https://social-backend-y1rg.onrender.com
@@ -227,7 +244,7 @@ git checkout -b prod
 git push origin prod  # Auto-deploys via GitHub Actions!
 ```
 
-#### 5. Get Your URL
+#### 6. Deploy & Get Your URL
 ```bash
 aws elbv2 describe-load-balancers \
   --names connektx-web-alb \
