@@ -5,13 +5,9 @@ import dynamic from 'next/dynamic';
 import Cookies from 'js-cookie';
 import { api } from '@/lib/blogApi';
 import ImagePreview from './ImagePreview';
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Dynamically import Jodit editor to prevent SSR issues
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
-
-// Initialize Gemini client (frontend)
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
 
 export default function BlogForm({ categories, onSubmit, submitButtonText, initialData }) {
   const editor = useRef(null);
@@ -86,20 +82,26 @@ export default function BlogForm({ categories, onSubmit, submitButtonText, initi
   // Jodit content handler
   const handleContent = (html) => setFormData((p) => ({ ...p, content: html }));
 
-  // Generate excerpt with Gemini AI
+  // Generate excerpt with Gemini AI (via backend API)
   const generateExcerpt = async () => {
     if (!formData.content) return;
     setIsGeneratingExcerpt(true);
     try {
-      const plainText = formData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      const prompt = `Summarize the following blog post into a short excerpt of about max 20 words:\n\n${plainText}`;
-      const result = await model.generateContent(prompt);
-      const excerpt = result.response.text().trim();
-      setFormData(prev => ({ ...prev, excerpt }));
+      const response = await fetch('/api/generate-excerpt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: formData.content })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setFormData(prev => ({ ...prev, excerpt: data.excerpt }));
     } catch (error) {
       console.error('[Gemini] Error generating excerpt:', error);
-      // fallback
+      // fallback: take first 25 words
       const plainText = formData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
       const words = plainText.split(' ');
       const excerpt = words.slice(0, 25).join(' ');
