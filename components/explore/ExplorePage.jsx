@@ -6,7 +6,7 @@ import { userApi } from "@/lib/userApi";
 import { searchApi } from "@/lib/searchApi";
 import { useSearchParams } from "next/navigation";
 import AppDownloadDialog from "@/components/AppDownloadDialog";
-import ChatFAB from "@/components/chatFab";
+import ChatFAB from "@/components/ChatFab";
 import AppHeader from "@/components/appheader/AppHeader";
 import ExploreSearchBar from "@/components/explore/ExploreSearchBar";
 import ExploreUserGrid from "@/components/explore/ExploreUserGrid";
