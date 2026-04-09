@@ -25,12 +25,14 @@ services:
     # Alternative: Load from .env.local file
     # env_file:
     #   - .env.local
-    healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
-      start_period: 40s
+    # Health check disabled for consistency with production setup
+    # In production, ALB target group health checks monitor /api/health
+    # healthcheck:
+    #   test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+    #   interval: 30s
+    #   timeout: 3s
+    #   retries: 3
+    #   start_period: 40s
     restart: unless-stopped
 
 # For production deployments with multiple services, you can add:

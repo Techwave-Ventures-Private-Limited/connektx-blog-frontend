@@ -180,13 +180,6 @@ TASK_DEF_JSON=$(cat <<EOF
         "awslogs-region": "$AWS_REGION",
         "awslogs-stream-prefix": "ecs"
       }
-    },
-    "healthCheck": {
-      "command": ["CMD-SHELL", "node -e \"require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})\""],
-      "interval": 30,
-      "timeout": 5,
-      "retries": 3,
-      "startPeriod": 60
     }
   }]
 }

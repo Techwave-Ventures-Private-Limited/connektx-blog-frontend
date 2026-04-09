@@ -127,15 +127,17 @@ The Dockerfile uses a 3-stage build process:
 
 #### Health Check
 
-The container includes an automatic health check that pings `/api/health` every 30 seconds:
+The application provides a `/api/health` endpoint that returns the container's health status. In production (AWS ECS), the Application Load Balancer (ALB) automatically monitors this endpoint to ensure traffic is only routed to healthy containers.
 
 ```bash
-# Check container health status
-docker inspect --format='{{json .State.Health}}' connektx-web
+# Test health endpoint locally
+curl http://localhost:3000/api/health
 
-# View health check logs
-docker logs connektx-web 2>&1 | grep health
+# Test health endpoint on AWS
+curl http://<your-alb-dns>/api/health
 ```
+
+**Note**: Container-level health checks are disabled to rely on ALB target group health checks, which are more reliable for production deployments.
 
 ### Environment-Specific Builds
 
@@ -330,14 +332,7 @@ docker run -d \
       "environment": [
         {"name": "AWS_SECRET_ARN", "value": "arn:aws:secretsmanager:ap-south-1:123456789012:secret:connektx-web-secrets"},
         {"name": "AWS_REGION", "value": "ap-south-1"}
-      ],
-      "healthCheck": {
-        "command": ["CMD-SHELL", "node -e \"require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})\""],
-        "interval": 30,
-        "timeout": 3,
-        "retries": 3,
-        "startPeriod": 40
-      }
+      ]
     }
   ]
 }
