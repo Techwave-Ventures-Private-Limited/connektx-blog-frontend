@@ -173,7 +173,7 @@ aws ec2 describe-subnets --query "Subnets[*].[SubnetId,AvailabilityZone]" --outp
 ```bash
 # Set your Gemini API key
 export GEMINI_API_KEY=your_actual_key_here
-export AWS_REGION=us-east-1
+export AWS_REGION=ap-south-1
 
 # Run setup (creates everything: ECR, ECS, ALB, Secrets Manager, IAM roles)
 chmod +x scripts/setup-aws-infrastructure.sh
@@ -193,7 +193,7 @@ This creates:
 #### 3. Push Initial Docker Image
 ```bash
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-AWS_REGION=us-east-1
+AWS_REGION=ap-south-1
 
 # Login to ECR
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
@@ -271,7 +271,7 @@ aws secretsmanager create-secret \
   --name connektx-web-secrets \
   --description "ConnektX web application secrets" \
   --secret-string '{"GEMINI_API_KEY":"your_actual_api_key_here"}' \
-  --region us-east-1
+  --region ap-south-1
 ```
 
 #### 2. Note the ARN of the created secret
@@ -279,7 +279,7 @@ aws secretsmanager create-secret \
 ```bash
 aws secretsmanager describe-secret \
   --secret-id connektx-web-secrets \
-  --region us-east-1 \
+  --region ap-south-1 \
   --query ARN \
   --output text
 ```
@@ -290,8 +290,8 @@ aws secretsmanager describe-secret \
 docker run -d \
   --name connektx-web \
   -p 3000:3000 \
-  -e AWS_SECRET_ARN=arn:aws:secretsmanager:us-east-1:123456789012:secret:connektx-web-secrets-AbCdEf \
-  -e AWS_REGION=us-east-1 \
+  -e AWS_SECRET_ARN=arn:aws:secretsmanager:ap-south-1:123456789012:secret:connektx-web-secrets-AbCdEf \
+  -e AWS_REGION=ap-south-1 \
   -e AWS_ACCESS_KEY_ID=your_access_key \
   -e AWS_SECRET_ACCESS_KEY=your_secret_key \
   connektx-web:latest
@@ -311,8 +311,8 @@ docker run -d \
       "image": "connektx-web:latest",
       "portMappings": [{"containerPort": 3000}],
       "environment": [
-        {"name": "AWS_SECRET_ARN", "value": "arn:aws:secretsmanager:us-east-1:123456789012:secret:connektx-web-secrets"},
-        {"name": "AWS_REGION", "value": "us-east-1"}
+        {"name": "AWS_SECRET_ARN", "value": "arn:aws:secretsmanager:ap-south-1:123456789012:secret:connektx-web-secrets"},
+        {"name": "AWS_REGION", "value": "ap-south-1"}
       ],
       "healthCheck": {
         "command": ["CMD-SHELL", "node -e \"require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})\""],
@@ -340,7 +340,7 @@ The ECS task role needs the following permissions:
         "secretsmanager:GetSecretValue",
         "secretsmanager:DescribeSecret"
       ],
-      "Resource": "arn:aws:secretsmanager:us-east-1:123456789012:secret:connektx-web-secrets*"
+      "Resource": "arn:aws:secretsmanager:ap-south-1:123456789012:secret:connektx-web-secrets*"
     }
   ]
 }

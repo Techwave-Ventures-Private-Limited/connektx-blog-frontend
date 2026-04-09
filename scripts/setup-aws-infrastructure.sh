@@ -6,7 +6,7 @@ echo "🚀 ConnektX AWS Infrastructure Setup"
 echo "====================================="
 
 # Configuration
-AWS_REGION="${AWS_REGION:-us-east-1}"
+AWS_REGION="${AWS_REGION:-ap-south-1}"
 PROJECT_NAME="connektx-web"
 GEMINI_API_KEY="${GEMINI_API_KEY:-}"
 
