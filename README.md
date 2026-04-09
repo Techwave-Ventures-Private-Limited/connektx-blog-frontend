@@ -157,6 +157,107 @@ docker build \
   -t connektx-web:prod .
 ```
 
+## AWS ECS Deployment (Production)
+
+### Quick Deploy to AWS ECS + Fargate (2 instances, auto-scaling)
+
+#### 1. Get AWS Details
+```bash
+# Get these values - you'll need them
+aws sts get-caller-identity --query Account --output text  # Account ID
+aws configure get region  # Region
+aws ec2 describe-subnets --query "Subnets[*].[SubnetId,AvailabilityZone]" --output table  # Copy 2 subnet IDs
+```
+
+#### 2. Run Infrastructure Setup
+```bash
+# Set your Gemini API key
+export GEMINI_API_KEY=your_actual_key_here
+export AWS_REGION=us-east-1
+
+# Run setup (creates everything: ECR, ECS, ALB, Secrets Manager, IAM roles)
+chmod +x scripts/setup-aws-infrastructure.sh
+./scripts/setup-aws-infrastructure.sh
+```
+
+This creates:
+- ECR repository for Docker images
+- ECS Fargate cluster with 2 tasks
+- Application Load Balancer
+- Auto-scaling (scales 1-4 tasks based on CPU)
+- Security groups & IAM roles
+- Secrets Manager for GEMINI_API_KEY
+
+**Takes 2-3 minutes.**
+
+#### 3. Push Initial Docker Image
+```bash
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+AWS_REGION=us-east-1
+
+# Login to ECR
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+# Build & push
+docker build \
+  --build-arg NEXT_PUBLIC_SITE_URL=https://connektx.com \
+  --build-arg NEXT_PUBLIC_BACKEND_URL=https://connektx-blogs-backend.onrender.com/api \
+  --build-arg NEXT_PUBLIC_APP_BACKEND_URL=https://social-backend-y1rg.onrender.com \
+  --build-arg NEXT_PUBLIC_WHATSAPP_URL=https://chat.whatsapp.com/INystETCrasCHg9fWHnWyT \
+  -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/connektx-web:latest .
+
+docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/connektx-web:latest
+```
+
+#### 4. Configure GitHub Auto-Deploy
+
+**Add GitHub Secrets** (Settings → Secrets → Actions):
+```
+AWS_ACCESS_KEY_ID=<your-key>
+AWS_SECRET_ACCESS_KEY=<your-secret>
+NEXT_PUBLIC_SITE_URL=https://connektx.com
+NEXT_PUBLIC_BACKEND_URL=https://connektx-blogs-backend.onrender.com/api
+NEXT_PUBLIC_APP_BACKEND_URL=https://social-backend-y1rg.onrender.com
+NEXT_PUBLIC_WHATSAPP_URL=https://chat.whatsapp.com/INystETCrasCHg9fWHnWyT
+```
+
+**Deploy**:
+```bash
+git checkout -b prod
+git push origin prod  # Auto-deploys via GitHub Actions!
+```
+
+#### 5. Get Your URL
+```bash
+aws elbv2 describe-load-balancers \
+  --names connektx-web-alb \
+  --query "LoadBalancers[0].DNSName" \
+  --output text
+```
+
+Visit: `http://<your-alb-dns>/api/health` to verify.
+
+### Monitoring & Management
+
+```bash
+# Check service status
+aws ecs describe-services --cluster connektx-web-cluster --services connektx-web-service
+
+# View logs
+aws logs tail /ecs/connektx-web --follow
+
+# Scale manually
+aws ecs update-service --cluster connektx-web-cluster --service connektx-web-service --desired-count 4
+
+# Update secrets
+aws secretsmanager update-secret --secret-id connektx-web-secrets --secret-string '{"GEMINI_API_KEY":"new_key"}'
+aws ecs update-service --cluster connektx-web-cluster --service connektx-web-service --force-new-deployment
+```
+
+**Cost**: ~$25/month (2 tasks, ALB, minimal traffic)
+
+---
+
 ## AWS Secrets Manager Integration
 
 For production deployments on AWS (ECS, EC2, Fargate), the application supports automatic secret retrieval from AWS Secrets Manager.
