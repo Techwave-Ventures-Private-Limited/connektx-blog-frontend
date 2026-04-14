@@ -4,14 +4,16 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { auth } from '@/lib/adminAuth';
-import { 
-  Home, 
-  FileText, 
-  FolderOpen, 
-  LogOut, 
-  Menu, 
+import {
+  Home,
+  FileText,
+  FolderOpen,
+  LogOut,
+  Menu,
   X,
-  BarChart3
+  BarChart3,
+  Calendar,
+  Briefcase
 } from 'lucide-react';
 
 export default function AdminLayout({ children }) {
@@ -23,6 +25,8 @@ export default function AdminLayout({ children }) {
     { name: 'Dashboard', href: '/admin', icon: BarChart3 },
     { name: 'Blogs', href: '/admin/blogs', icon: FileText },
     { name: 'Categories', href: '/admin/categories', icon: FolderOpen },
+    { name: 'Events', href: '/admin/events', icon: Calendar },
+    { name: 'Jobs', href: '/admin/jobs', icon: Briefcase },
   ];
 
   const handleLogout = () => {
