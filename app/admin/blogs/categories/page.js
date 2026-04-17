@@ -63,7 +63,7 @@ export default function AdminCategories() {
             <p className="text-lg text-blue-600">Create and manage blog categories</p>
           </div>
           <Link
-            href="/admin/categories/add"
+            href="/admin/blogs/categories/add"
             className="bg-blue-600 text-white px-6 py-3 rounded-xl flex items-center gap-2 hover:bg-blue-700 shadow-lg font-semibold text-base transition-all"
           >
             <Plus size={20} />
@@ -77,7 +77,7 @@ export default function AdminCategories() {
           <div className="text-center py-20 bg-white rounded-3xl shadow-2xl border border-blue-50">
             <p className="text-blue-500 text-xl mb-4">No categories yet</p>
             <Link
-              href="/admin/categories/add"
+              href="/admin/blogs/categories/add"
               className="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 shadow-lg font-semibold text-base transition-all"
             >
               Create Your First Category
@@ -123,7 +123,7 @@ export default function AdminCategories() {
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center gap-2 justify-end">
                           <Link
-                            href={`/admin/categories/edit/${category.id}`}
+                            href={`/admin/blogs/categories/edit/${category.id}`}
                             className="text-indigo-600 hover:text-indigo-900 p-1 rounded hover:bg-indigo-50"
                           >
                             <Edit size={18} />

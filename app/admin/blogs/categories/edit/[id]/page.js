@@ -38,13 +38,13 @@ export default function EditCategory({ params }) {
       const categoriesRes = await publicApi.getCategories();
       const category = categoriesRes.data.find(c => c.id === resolvedParams.id);
       if (!category) {
-        router.push('/admin/categories');
+        router.push('/admin/blogs/categories');
         return;
       }
       setInitialData(category);
     } catch (error) {
       console.error('Error fetching data:', error);
-      router.push('/admin/categories');
+      router.push('/admin/blogs/categories');
     } finally {
       setLoading(false);
     }
@@ -60,7 +60,7 @@ export default function EditCategory({ params }) {
         slug: categoryData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
       });
       console.log('Updated category data:', categoryData);
-      router.push('/admin/categories');
+      router.push('/admin/blogs/categories');
     } catch (error) {
       console.error('Error updating category:', error);
       throw error;
