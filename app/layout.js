@@ -60,6 +60,12 @@ export default function RootLayout({ children }) {
         {/* 🔑 SEO Sitemap link */}
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
         <meta name="facebook-domain-verification" content="wkf0gfpvopi2ubho29pnc9l5wp1agi" />
+
+        {/* 💳 Razorpay Checkout SDK */}
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="lazyOnload"
+        />
         <Script id="fb-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)
