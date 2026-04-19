@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { jobApi } from "@/lib/jobApi";
 import WhatsAppFab from "@/components/WhatsAppFab";
 import AppHeader from "@/components/appheader/AppHeader";
+import FeatureGate from "@/components/subscription/FeatureGate";
 
 export default function JobDetailPage() {
   const { slug } = useParams();
@@ -74,24 +75,26 @@ export default function JobDetailPage() {
       </div>
 
       {/* APPLY BUTTON */}
-      <div className="mb-10">
-        {job.applyMethod === "External" ? (
-          <a
-            href={job.externalApplyLink}
-            target="_blank"
-            className="bg-white text-black px-6 py-3 text-sm font-bold"
-          >
-            Apply Now
-          </a>
-        ) : (
-          <a
-            href={`/jobs/${job.slug}/apply`}
-            className="bg-white text-black px-6 py-3 text-sm font-bold"
-          >
-            Easy Apply
-          </a>
-        )}
-      </div>
+      <FeatureGate featureKey="job_applications">
+        <div className="mb-10">
+          {job.applyMethod === "External" ? (
+            <a
+              href={job.externalApplyLink}
+              target="_blank"
+              className="bg-white text-black px-6 py-3 text-sm font-bold"
+            >
+              Apply Now
+            </a>
+          ) : (
+            <a
+              href={`/jobs/${job.slug}/apply`}
+              className="bg-white text-black px-6 py-3 text-sm font-bold"
+            >
+              Easy Apply
+            </a>
+          )}
+        </div>
+      </FeatureGate>
 
       {/* DESCRIPTION */}
       <Section title="About the Role">
