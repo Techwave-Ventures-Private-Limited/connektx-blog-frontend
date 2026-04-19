@@ -1,13 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import { jobApi } from "@/lib/jobApi";
+import { userApi } from "@/lib/userApi";
 import { Search } from "lucide-react";
 import AppHeader from "@/components/appheader/AppHeader";
 import WhatsAppFab from "@/components/WhatsAppFab";
+import AuthWall from "@/components/AuthWall";
 
 export default function JobsPage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profileCompletion, setProfileCompletion] = useState(0);
+  const [showWall, setShowWall] = useState(true);
 
   // Filters state
   const [filters, setFilters] = useState({
@@ -18,6 +24,35 @@ export default function JobsPage() {
     page: 1,
     limit: 10
   });
+
+  // Check authentication and profile completion
+  const checkAuth = async () => {
+    try {
+      const token = Cookies.get("user_token");
+      if (!token) {
+        setIsLoggedIn(false);
+        setShowWall(true);
+        return;
+      }
+
+      setIsLoggedIn(true);
+
+      // Fetch user profile to get completion from backend
+      const userData = await userApi.getSelf();
+      const user = userData?.body || userData?.user;
+
+      if (user) {
+        // Use backend-calculated profile completion
+        const completion = user.profileCompletion || 0;
+        setProfileCompletion(completion);
+        setShowWall(completion < 70);
+      }
+    } catch (err) {
+      console.error("Auth check failed:", err);
+      setIsLoggedIn(false);
+      setShowWall(true);
+    }
+  };
 
   // Fetch jobs
   const fetchJobs = async () => {
@@ -33,6 +68,11 @@ export default function JobsPage() {
   };
 
   useEffect(() => {
+    checkAuth();
+    fetchJobs();
+  }, []);
+
+  useEffect(() => {
     fetchJobs();
   }, [filters]);
 
@@ -42,7 +82,15 @@ export default function JobsPage() {
   const selectStyle = inputStyle;
 
   return (
-    <div className="min-h-screen bg-black text-white px-4 md:px-8 py-10 max-w-6xl mx-auto">
+    <div className="min-h-screen bg-black text-white px-4 md:px-8 py-10 max-w-6xl mx-auto relative">
+
+      {/* Auth Wall Overlay */}
+      {showWall && (
+        <AuthWall
+          isLoggedIn={isLoggedIn}
+          profileCompletion={profileCompletion}
+        />
+      )}
 
       <AppHeader description="Discover opportunities from founders & companies" />
 

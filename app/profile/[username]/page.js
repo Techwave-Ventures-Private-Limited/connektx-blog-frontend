@@ -1,3 +1,5 @@
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { userApi } from '@/lib/userApi';
 import { notFound } from 'next/navigation';
 import {
@@ -24,16 +26,34 @@ export async function generateMetadata({ params }) {
       title: `${user.name} (@${username}) | Connektx`,
       description: user.headline || user.bio || `Connect with ${user.name} on Connektx.`,
       openGraph: {
+        title: `${user.name} (@${username})`,
+        description: user.headline || user.bio || `Connect with ${user.name} on Connektx.`,
         images: [user.profileImage || '/images/default-avatar.png'],
+        type: 'profile',
       },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${user.name} (@${username})`,
+        description: user.headline || user.bio,
+        images: [user.profileImage || '/images/default-avatar.png'],
+      }
     };
   } catch (e) {
-    return { title: 'Profile' };
+    return { title: 'Profile Not Found' };
   }
 }
 
 export default async function ProfilePage({ params }) {
   const { username } = await params;
+
+  // Check if viewing own profile - redirect to /profile
+  const cookieStore = await cookies();
+  const currentUsername = cookieStore.get('username')?.value;
+
+  if (currentUsername && currentUsername === username) {
+    redirect('/profile');
+  }
+
   let user;
 
   try {

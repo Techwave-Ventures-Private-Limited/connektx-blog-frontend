@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { userApi } from "@/lib/userApi";
 import { appApi } from "@/lib/appApi";
@@ -49,6 +50,7 @@ function toDateInput(value) {
 // formatDateRange shared in components/profile/historyUtils.js
 
 export default function SelfProfilePage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -362,6 +364,92 @@ export default function SelfProfilePage() {
                 </div>
               )}
             />
+
+            {/* Profile Completion Card */}
+            <div className="bg-gradient-to-br from-blue-600/10 to-purple-600/10 border border-white/10 p-6 rounded-2xl">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-white">Profile Strength</h3>
+                <span className="text-2xl font-bold text-white">{user.profileCompletion || 0}%</span>
+              </div>
+
+              <div className="w-full bg-white/10 h-2.5 rounded-full overflow-hidden mb-4">
+                <div
+                  className={`h-full transition-all duration-500 ${
+                    (user.profileCompletion || 0) >= 70
+                      ? 'bg-green-500'
+                      : (user.profileCompletion || 0) >= 40
+                      ? 'bg-yellow-500'
+                      : 'bg-red-500'
+                  }`}
+                  style={{ width: `${user.profileCompletion || 0}%` }}
+                />
+              </div>
+
+              <p className="text-xs text-slate-400 mb-4">
+                {(user.profileCompletion || 0) >= 70
+                  ? '✓ Your profile looks great!'
+                  : (user.profileCompletion || 0) >= 40
+                  ? 'Keep going! Add more details to unlock opportunities.'
+                  : 'Complete your profile to access job listings and connect with others.'}
+              </p>
+
+              {/* Missing Fields Breakdown */}
+              {(user.profileCompletion || 0) < 100 && (
+                <div className="space-y-2 pt-3 border-t border-white/10">
+                  <p className="text-xs font-medium text-slate-300 mb-2">What's missing:</p>
+                  <div className="space-y-1.5 text-xs text-slate-400">
+                    {!user.headline && !(user.about?.headline) && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-red-400">✗</span>
+                        <span>Add a headline</span>
+                      </div>
+                    )}
+                    {!user.bio && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-red-400">✗</span>
+                        <span>Write your bio</span>
+                      </div>
+                    )}
+                    {!user.profileImage && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-red-400">✗</span>
+                        <span>Upload profile image</span>
+                      </div>
+                    )}
+                    {!user.address && !(user.about?.location) && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-red-400">✗</span>
+                        <span>Add your location</span>
+                      </div>
+                    )}
+                    {!user.website && !(user.about?.website) && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-red-400">✗</span>
+                        <span>Add website/portfolio</span>
+                      </div>
+                    )}
+                    {(!user.about?.skills || user.about.skills.length === 0) && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-red-400">✗</span>
+                        <span>Add skills</span>
+                      </div>
+                    )}
+                    {(!user.experience || user.experience.length === 0) && (!user.about?.experience || user.about.experience.length === 0) && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-red-400">✗</span>
+                        <span>Add work experience</span>
+                      </div>
+                    )}
+                    {(!user.education || user.education.length === 0) && (!user.about?.education || user.about.education.length === 0) && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-red-400">✗</span>
+                        <span>Add education</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
 
             {error && (
               <div className="bg-red-500/10 border border-red-500/30 text-red-200 text-sm px-4 py-3 rounded-2xl">
