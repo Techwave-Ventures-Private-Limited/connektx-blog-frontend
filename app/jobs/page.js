@@ -78,7 +78,11 @@ export default function JobsPage() {
 
       {/* Profile Completion Wall */}
       {showWall && (
-        <AuthWall profileCompletion={profileCompletion} />
+        <AuthWall
+          profileCompletion={profileCompletion}
+          title="Complete Your Profile"
+          message="To access job listings, please complete at least 70% of your profile."
+        />
       )}
 
       <AppHeader description="Discover opportunities from founders & companies" />

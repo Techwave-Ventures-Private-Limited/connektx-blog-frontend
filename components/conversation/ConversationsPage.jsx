@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useSearchParams } from "next/navigation";
 import { messageApi } from "@/lib/messageApi";
+import { userApi } from "@/lib/userApi";
 import ConversationsSidebar from "@/components/conversation/ConversationsSidebar";
 import ChatWindow from "@/components/conversation/ChatWindow";
+import AuthWall from "@/components/AuthWall";
 
 const getCurrentUserId = () => {
   const token = Cookies.get("user_token");
@@ -24,11 +26,14 @@ export default function ConversationsPage() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [processingRequest, setProcessingRequest] = useState(null);
+  const [profileCompletion, setProfileCompletion] = useState(0);
+  const [showWall, setShowWall] = useState(false);
   const currentUserId = getCurrentUserId();
   const searchParams = useSearchParams();
   const conversationIdFromQuery = searchParams.get("conversationId");
 
   useEffect(() => {
+    checkProfileCompletion();
     fetchConversationData();
   }, []);
 
@@ -39,6 +44,28 @@ export default function ConversationsPage() {
       setSelectedChat(match);
     }
   }, [conversationIdFromQuery, conversations]);
+
+  const checkProfileCompletion = async () => {
+    try {
+      const token = Cookies.get("user_token");
+      if (!token) {
+        setShowWall(false);
+        return;
+      }
+
+      const userData = await userApi.getSelf();
+      const user = userData?.body || userData?.user;
+
+      if (user) {
+        const completion = user.profileCompletion || 0;
+        setProfileCompletion(completion);
+        setShowWall(completion < 70);
+      }
+    } catch (err) {
+      console.error("Profile check failed:", err);
+      setShowWall(false);
+    }
+  };
 
   const fetchConversationData = async () => {
     setLoading(true);
@@ -87,7 +114,16 @@ export default function ConversationsPage() {
   );
 
   return (
-    <div className="h-screen bg-black text-white flex">
+    <div className="h-screen bg-black text-white flex relative">
+      {/* Profile Completion Wall */}
+      {showWall && (
+        <AuthWall
+          profileCompletion={profileCompletion}
+          title="Complete Your Profile"
+          message="To access conversations, please complete at least 70% of your profile."
+        />
+      )}
+
       <ConversationsSidebar
         loading={loading}
         requests={requests}

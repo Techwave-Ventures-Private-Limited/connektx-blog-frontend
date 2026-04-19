@@ -2,7 +2,11 @@
 
 import { useRouter } from "next/navigation";
 
-export default function AuthWall({ profileCompletion }) {
+export default function AuthWall({
+  profileCompletion,
+  title = "Complete Your Profile",
+  message = "Please complete at least 70% of your profile to access this feature."
+}) {
   const router = useRouter();
 
   // Only show if profile completion is less than 70%
@@ -14,10 +18,10 @@ export default function AuthWall({ profileCompletion }) {
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-black border border-white/20 rounded-lg p-8 max-w-md w-full relative">
         <h2 className="text-2xl font-bold text-white mb-4">
-          Complete Your Profile
+          {title}
         </h2>
         <p className="text-slate-400 mb-2">
-          To access job listings, please complete at least 70% of your profile.
+          {message}
         </p>
         <div className="mb-6">
           <div className="flex justify-between text-sm mb-2">
