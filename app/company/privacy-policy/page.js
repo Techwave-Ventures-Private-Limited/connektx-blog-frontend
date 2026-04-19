@@ -62,6 +62,18 @@ export default function PrivacyPolicy() {
           </ul>
         </section>
 
+        {/* 3. Data Sharing */}
+        <section className="mb-10">
+          <h2 className="text-3xl font-semibold text-gray-900 mb-4 border-b border-gray-300 pb-2">3. How We Share Your Information</h2>
+          <p className="mb-4 leading-relaxed">We do not sell your personal information. We may share your data in the following circumstances:</p>
+          <ul className="list-disc list-inside space-y-2 ml-4">
+            <li><strong className="font-medium">Service Providers:</strong> We work with trusted third-party service providers (e.g., payment processors like Razorpay, cloud hosting providers) who help us operate the Service. These providers are contractually obligated to protect your data.</li>
+            <li><strong className="font-medium">Legal Compliance:</strong> We may disclose your information if required by law or in response to valid legal requests (e.g., court orders, subpoenas).</li>
+            <li><strong className="font-medium">Business Transfers:</strong> If ConnektX is involved in a merger, acquisition, or sale of assets, your information may be transferred as part of that transaction.</li>
+            <li><strong className="font-medium">With Your Consent:</strong> We may share your information with third parties when you explicitly consent to such sharing.</li>
+          </ul>
+        </section>
+
         {/* 4. Rights */}
         <section className="mb-10">
           <h2 className="text-3xl font-semibold text-gray-900 mb-4 border-b border-gray-300 pb-2">4. Your Choices and Rights</h2>
