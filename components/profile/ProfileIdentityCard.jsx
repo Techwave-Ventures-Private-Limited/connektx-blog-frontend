@@ -1,4 +1,5 @@
 import StatBox from "./StatBox";
+import ProfileSubscriptionBadge from "./ProfileSubscriptionBadge";
 
 export default function ProfileIdentityCard({
   user,
@@ -20,11 +21,7 @@ export default function ProfileIdentityCard({
           className="w-32 h-32 lg:w-40 lg:h-40 rounded-[2rem] object-cover border-4 border-[#07090e] shadow-xl"
           alt={user.name}
         />
-        {badge && (
-          <div className="absolute -bottom-2 -right-2 bg-blue-600 p-2 rounded-xl border-4 border-[#07090e]">
-            {badge}
-          </div>
-        )}
+        <ProfileSubscriptionBadge />
       </div>
 
       <h1 className="text-3xl font-black tracking-tighter mb-1">{user.name}</h1>

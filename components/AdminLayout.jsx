@@ -13,21 +13,40 @@ import {
   X,
   BarChart3,
   Calendar,
-  Briefcase
+  Briefcase,
+  ChevronDown,
+  ChevronRight,
+  Newspaper
 } from 'lucide-react';
 
 export default function AdminLayout({ children }) {
   const router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedItems, setExpandedItems] = useState(['blogs']); // Default: blogs expanded
 
   const navigation = [
-    { name: 'Dashboard', href: '/admin', icon: BarChart3 },
-    { name: 'Blogs', href: '/admin/blogs', icon: FileText },
-    { name: 'Categories', href: '/admin/categories', icon: FolderOpen },
+    { name: 'Analytics', href: '/admin', icon: BarChart3 },
+    {
+      name: 'Blogs',
+      icon: FileText,
+      items: [
+        { name: 'Dashboard', href: '/admin/blogs/dashboard', icon: BarChart3 },
+        { name: 'Manage', href: '/admin/blogs', icon: FileText },
+        { name: 'Categories', href: '/admin/blogs/categories', icon: FolderOpen },
+      ]
+    },
     { name: 'Events', href: '/admin/events', icon: Calendar },
     { name: 'Jobs', href: '/admin/jobs', icon: Briefcase },
   ];
+
+  const toggleExpanded = (itemName) => {
+    setExpandedItems(prev =>
+      prev.includes(itemName)
+        ? prev.filter(i => i !== itemName)
+        : [...prev, itemName]
+    );
+  };
 
   const handleLogout = () => {
     auth.logout();
@@ -35,7 +54,26 @@ export default function AdminLayout({ children }) {
   };
 
   const isActivePage = (href) => {
-    return pathname === href || (href !== '/admin' && pathname.startsWith(href));
+    // Exact match is always correct
+    if (pathname === href) return true;
+
+    // For sub-menu items (like those under Blogs), use exact match only
+    // Don't use startsWith for sibling routes
+    const knownExactMatchRoutes = [
+      '/admin/blogs/dashboard',
+      '/admin/blogs/categories'
+    ];
+
+    // If current page or href is in known exact match routes, only use exact matching
+    if (knownExactMatchRoutes.includes(pathname) || knownExactMatchRoutes.includes(href)) {
+      return false;
+    }
+
+    // For other routes (like /admin/blogs matching /admin/blogs/add)
+    // Use startsWith with trailing slash check
+    if (href === '/admin') return false;
+
+    return pathname.startsWith(href + '/');
   };
 
   return (
@@ -61,25 +99,73 @@ export default function AdminLayout({ children }) {
           </button>
         </div>
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-6 space-y-1">
+        <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
           {navigation.map((item) => {
             const Icon = item.icon;
+            const isExpanded = expandedItems.includes(item.name.toLowerCase());
+            const hasSubItems = item.items && item.items.length > 0;
+
             return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`
-                  flex items-center px-4 py-2 text-base font-semibold rounded-lg transition-colors
-                  ${isActivePage(item.href)
-                    ? 'bg-gradient-to-r from-blue-700 to-blue-600 text-white shadow-lg'
-                    : 'text-blue-100 hover:bg-blue-800 hover:text-white'
-                  }
-                `}
-                onClick={() => setSidebarOpen(false)}
-              >
-                <Icon className="mr-3 h-5 w-5" />
-                {item.name}
-              </Link>
+              <div key={item.name}>
+                {/* Parent Item */}
+                {hasSubItems ? (
+                  <button
+                    onClick={() => toggleExpanded(item.name.toLowerCase())}
+                    className="flex items-center justify-between w-full px-4 py-2 text-base font-semibold rounded-lg transition-colors text-blue-100 hover:bg-blue-800 hover:text-white"
+                  >
+                    <div className="flex items-center">
+                      <Icon className="mr-3 h-5 w-5" />
+                      {item.name}
+                    </div>
+                    {isExpanded ? (
+                      <ChevronDown className="h-4 w-4" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4" />
+                    )}
+                  </button>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className={`
+                      flex items-center px-4 py-2 text-base font-semibold rounded-lg transition-colors
+                      ${isActivePage(item.href)
+                        ? 'bg-gradient-to-r from-blue-700 to-blue-600 text-white shadow-lg'
+                        : 'text-blue-100 hover:bg-blue-800 hover:text-white'
+                      }
+                    `}
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <Icon className="mr-3 h-5 w-5" />
+                    {item.name}
+                  </Link>
+                )}
+
+                {/* Sub Items */}
+                {hasSubItems && isExpanded && (
+                  <div className="ml-4 mt-1 space-y-1">
+                    {item.items.map((subItem) => {
+                      const SubIcon = subItem.icon;
+                      return (
+                        <Link
+                          key={subItem.name}
+                          href={subItem.href}
+                          className={`
+                            flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors
+                            ${isActivePage(subItem.href)
+                              ? 'bg-blue-700 text-white shadow-md'
+                              : 'text-blue-200 hover:bg-blue-800 hover:text-white'
+                            }
+                          `}
+                          onClick={() => setSidebarOpen(false)}
+                        >
+                          <SubIcon className="mr-3 h-4 w-4" />
+                          {subItem.name}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             );
           })}
         </nav>

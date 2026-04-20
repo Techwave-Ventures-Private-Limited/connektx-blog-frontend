@@ -38,7 +38,7 @@
 //         ...formData,
 //         slug: formData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
 //       });
-//       router.push('/admin/categories');
+//       router.push('/admin/blogs/categories');
 //     } catch (error) {
 //       console.error('Error creating category:', error);
 //       alert('Failed to create category. Please try again.');
@@ -152,7 +152,7 @@ export default function AddCategory() {
         slug: formData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
         imgUrl: formData.imgUrlInput,
       });
-      router.push('/admin/categories');
+      router.push('/admin/blogs/categories');
     } catch (error) {
       console.error('Error creating category:', error);
       alert('Failed to create category. Please try again.');

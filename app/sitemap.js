@@ -45,8 +45,38 @@ export default async function sitemap() {
       }));
     }
   } catch (error) {
-    console.error("Sitemap dynamic fetch failed:", error);
+    console.error("Sitemap blog fetch failed:", error);
   }
 
-  return [...getStaticRoutes(), ...blogEntries];
+  // 3. GET DYNAMIC JOB ROUTES
+  let jobEntries = [];
+  try {
+    const jobUrl = `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/job/public/all?limit=1000`;
+    console.log('Fetching jobs from:', jobUrl);
+
+    const response = await fetch(jobUrl);
+    console.log('Job fetch response status:', response.status);
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log('Job fetch result:', result);
+
+      const jobs = result.data || [];
+      console.log('Number of jobs found:', jobs.length);
+
+      jobEntries = jobs.map((job) => ({
+        url: `${baseUrl}/jobs/${job.slug}`,
+        lastModified: job.updatedAt || new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      }));
+      console.log('Job entries created:', jobEntries.length);
+    } else {
+      console.error('Job fetch failed with status:', response.status);
+    }
+  } catch (error) {
+    console.error("Sitemap job fetch failed:", error);
+  }
+
+  return [...getStaticRoutes(), ...blogEntries, ...jobEntries];
 }

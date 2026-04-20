@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { Download } from "lucide-react";
+import Cookies from "js-cookie";
 import { userApi } from "@/lib/userApi";
 import { searchApi } from "@/lib/searchApi";
 import { useSearchParams } from "next/navigation";
@@ -11,6 +12,7 @@ import AppHeader from "@/components/appheader/AppHeader";
 import ExploreSearchBar from "@/components/explore/ExploreSearchBar";
 import ExploreUserGrid from "@/components/explore/ExploreUserGrid";
 import ExplorePagination from "@/components/explore/ExplorePagination";
+import AuthWall from "@/components/AuthWall";
 
 function ExploreContent() {
   const searchParams = useSearchParams();
@@ -22,6 +24,8 @@ function ExploreContent() {
   const [query, setQuery] = useState("");
   const [searching, setSearching] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  const [profileCompletion, setProfileCompletion] = useState(0);
+  const [showWall, setShowWall] = useState(false);
   const isSearchActive = query.trim().length >= 4;
 
   useEffect(() => {
@@ -29,17 +33,48 @@ function ExploreContent() {
       setShowSuccessDialog(true);
       window.history.replaceState({}, "", "/explore");
     }
+    checkProfileCompletion();
     fetchUsers(1, true);
   }, [searchParams]);
 
+  // Check profile completion when search becomes active
   useEffect(() => {
     if (!isSearchActive) {
       setSearchResults([]);
       setSearching(false);
+      setShowWall(false);
       return;
     }
 
-    const handle = setTimeout(async () => {
+    // Check profile completion before allowing search
+    const checkAndSearch = async () => {
+      const token = Cookies.get("user_token");
+      if (!token) {
+        // Not logged in - allow search
+        performSearch();
+        return;
+      }
+
+      try {
+        const userData = await userApi.getSelf();
+        const user = userData?.body || userData?.user;
+        const completion = user?.profileCompletion || 0;
+        setProfileCompletion(completion);
+
+        if (completion < 70) {
+          setShowWall(true);
+          setSearching(false);
+          return;
+        }
+
+        performSearch();
+      } catch (error) {
+        console.error("Profile check failed:", error);
+        performSearch();
+      }
+    };
+
+    const performSearch = async () => {
       setSearching(true);
       try {
         const data = await searchApi.searchUsers(query.trim(), { limit: 20 });
@@ -49,10 +84,26 @@ function ExploreContent() {
       } finally {
         setSearching(false);
       }
-    }, 300);
+    };
 
+    const handle = setTimeout(checkAndSearch, 300);
     return () => clearTimeout(handle);
   }, [query, isSearchActive]);
+
+  const checkProfileCompletion = async () => {
+    try {
+      const token = Cookies.get("user_token");
+      if (!token) return;
+
+      const userData = await userApi.getSelf();
+      const user = userData?.body || userData?.user;
+      if (user) {
+        setProfileCompletion(user.profileCompletion || 0);
+      }
+    } catch (err) {
+      console.error("Profile check failed:", err);
+    }
+  };
 
   const fetchUsers = async (pageNum, isInitial = false) => {
     setLoading(true);
@@ -86,6 +137,15 @@ function ExploreContent() {
 
   return (
     <>
+      {/* Profile Completion Wall */}
+      {showWall && (
+        <AuthWall
+          profileCompletion={profileCompletion}
+          title="Complete Your Profile"
+          message="To search for users, please complete at least 70% of your profile."
+        />
+      )}
+
       <AppDownloadDialog
         isOpen={showSuccessDialog}
         onClose={() => setShowSuccessDialog(false)}

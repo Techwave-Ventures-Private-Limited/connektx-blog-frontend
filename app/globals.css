@@ -51,12 +51,12 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Allow editable text to follow theme colors */
-input, 
-textarea, 
+/* Force dark text color for all editable fields */
+input,
+textarea,
 select,
 [contenteditable="true"] {
-  color: inherit;
+  color: #374151 !important;
 }
 
 /* Explicit fallback for readability if background is dark */
@@ -71,8 +71,9 @@ input[type="password"],
 input[type="number"],
 input[type="search"],
 input[type="url"],
-input[type="tel"] {
-  color: inherit;
+input[type="tel"],
+input[type="date"] {
+  color: #374151 !important;
 }
 
 /* Focus states */
@@ -80,16 +81,16 @@ input:focus,
 textarea:focus,
 select:focus,
 [contenteditable="true"]:focus {
-  color: inherit;
+  color: #374151 !important;
 }
 
-/* Disabled and readonly states */
+/* Disabled and readonly states - slightly lighter */
 input:disabled,
 textarea:disabled,
 select:disabled,
 input:read-only,
 textarea:read-only {
-  color: inherit;
+  color: #4b5563 !important;
 }
 
 /* Placeholder styling - keep as gray for visibility */
