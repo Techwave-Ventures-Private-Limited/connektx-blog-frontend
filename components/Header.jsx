@@ -20,13 +20,20 @@ export default function Header() {
             </span>
           </Link>
 
-          {/* RIGHT: Articles + Join Now */}
+          {/* RIGHT: Articles + Jobs + Login */}
           <div className="flex items-center space-x-8">
             <Link
               href="/articles"
               className="text-sm font-medium text-slate-600 hover:text-sky-600 transition"
             >
               Articles
+            </Link>
+
+            <Link
+              href="/jobs"
+              className="text-sm font-medium text-slate-600 hover:text-sky-600 transition"
+            >
+              Jobs
             </Link>
 
             {/* Login Button */}
